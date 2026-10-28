@@ -1,0 +1,16 @@
+@import "tailwindcss" source("../");
+
+@theme inline {
+  --font-sans: var(--font-dm-sans), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-dm-serif), Georgia, "Times New Roman", serif;
+}
+
+@theme {
+  --color-green: #073c32;
+  --color-deep: #052c25;
+  --color-ink: #173c34;
+  --color-gold: #edbe66;
+  --color-ivory: #faf8f1;
+  --color-muted: #6a756e;
+  --color-line: #dddcd1;
+}
