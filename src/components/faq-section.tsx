@@ -52,15 +52,15 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
       <div className="mx-auto w-[calc(100%-128px)] max-w-[1280px] max-[1150px]:w-[calc(100%-80px)] max-[900px]:w-[calc(100%-56px)] max-[760px]:w-[calc(100%-40px)] max-[370px]:w-[calc(100%-32px)]">
         <div className="mb-9 flex items-end justify-between gap-12 max-[760px]:mb-7 max-[760px]:block" data-reveal>
           <div>
-            <p className="mb-4 flex items-center gap-2.5 text-[9px] font-semibold tracking-[1.8px] text-[#6c7b5b] max-[600px]:text-[8px]">
+            <p className="mb-4 flex items-center gap-2.5 text-[13px] font-semibold tracking-[1.8px] text-[#5f6c50] max-[600px]:text-[12px]">
               <span className="h-px w-6 bg-[#b3945e]" aria-hidden="true" />
               A LITTLE CLARITY, A LITTLE CONFIDENCE
             </p>
             <h2 id="faq-heading" className="text-[clamp(38px,3.7vw,52px)] leading-[1.06] tracking-[-1.5px] text-green max-[600px]:text-[39px] max-[370px]:text-[36px]">
-              Good questions.<br /><em className="text-[#829166]">Clearer beginnings.</em>
+              Good questions.<br /><em className="text-[#687552]">Clearer beginnings.</em>
             </h2>
           </div>
-          <p className="max-w-[310px] pb-1 text-[12px] leading-[1.85] text-[#6e7b65] max-[760px]:mt-5 max-[760px]:max-w-[440px] max-[760px]:pb-0">
+          <p className="max-w-[310px] pb-1 text-[16px] leading-[1.85] text-[#606c58] max-[760px]:mt-5 max-[760px]:max-w-[440px] max-[760px]:pb-0">
             A new school is a big step for the whole family. Here are a few answers to help you feel ready for what comes next.
           </p>
         </div>
@@ -87,13 +87,13 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
                       onKeyDown={event => navigateQuestions(event, index)}
                       className="flex min-h-[72px] w-full items-center gap-5 rounded-lg px-6 py-4 text-left focus-visible:outline-offset-4 max-[600px]:gap-3 max-[600px]:px-4 max-[600px]:py-4"
                     >
-                      <span aria-hidden="true" className="w-7 shrink-0 font-serif text-[23px] leading-none text-[#9ba789] transition-colors group-data-[open=true]:text-[#a6874c] max-[600px]:w-5 max-[600px]:text-[20px]">
+                      <span aria-hidden="true" className="w-7 shrink-0 font-serif text-[23px] leading-none text-[#616c51] transition-colors group-data-[open=true]:text-[#7c6539] max-[600px]:w-5 max-[600px]:text-[20px]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="flex-1 text-[13px] font-medium leading-[1.6] text-[#3e5545] group-data-[open=true]:text-green max-[600px]:text-[12px]">
+                      <span className="flex-1 text-[17px] font-medium leading-[1.6] text-[#3e5545] group-data-[open=true]:text-green max-[600px]:text-[16px]">
                         {item.question}
                       </span>
-                      <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full border border-[#d6ddc9] text-[#788c62] transition-[background-color,border-color,color] duration-300 group-data-[open=true]:border-green group-data-[open=true]:bg-green group-data-[open=true]:text-[#ecd3a1] max-[600px]:size-7">
+                      <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full border border-[#d6ddc9] text-[#5d6c4c] transition-[background-color,border-color,color] duration-300 group-data-[open=true]:border-green group-data-[open=true]:bg-green group-data-[open=true]:text-[#ecd3a1] max-[600px]:size-7">
                         <Plus size={15} strokeWidth={1.5} className="transition-transform duration-300 group-data-[open=true]:rotate-45" />
                       </span>
                     </button>
@@ -108,7 +108,7 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
                   >
                     <div className="min-h-0 overflow-hidden">
                       <div className="mr-[76px] ml-[72px] border-t border-[#e7e8db] pt-3 pb-5 max-[600px]:mr-4 max-[600px]:ml-12">
-                        <p className="text-[12px] leading-[1.9] text-[#6d7b63] max-[600px]:text-[11px]">{item.answer}</p>
+                        <p className="text-[16px] leading-[1.9] text-[#5f6b56] max-[600px]:text-[15px]">{item.answer}</p>
                       </div>
                     </div>
                   </div>
@@ -121,19 +121,19 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
             <div aria-hidden="true" className="pointer-events-none absolute -top-24 -right-24 -z-10 size-72 rounded-full border border-[#dac68f1a] shadow-[0_0_0_32px_#dac68f05,0_0_0_64px_#dac68f03]" />
             <div>
               <span className="mb-6 grid size-12 place-items-center rounded-full border border-[#dcc79340] bg-[#ffffff05] text-[#e5cc96] max-[600px]:mb-5"><MessageCircle size={23} strokeWidth={1.2} aria-hidden="true" /></span>
-              <p className="mb-3 text-[8px] font-medium tracking-[1.6px] text-[#c6caa8]">SOME ANSWERS ARE PERSONAL.</p>
+              <p className="mb-3 text-[12px] font-medium tracking-[1.6px] text-[#c6caa8]">SOME ANSWERS ARE PERSONAL.</p>
               <h3 className="font-serif text-[34px] leading-[1.08] tracking-[-.7px] max-[600px]:text-[32px]">Still have<br /><em className="text-[#e4cb94]">a question?</em></h3>
-              <p className="mt-4 text-[11px] leading-[1.85] text-[#c0cfb9]">Every child’s journey is different. Let’s talk through what matters to your family.</p>
+              <p className="mt-4 text-[15px] leading-[1.85] text-[#c0cfb9]">Every child’s journey is different. Let’s talk through what matters to your family.</p>
             </div>
             <div className="mt-6 max-[900px]:self-center max-[900px]:mt-0 max-[600px]:mt-6">
-              <button type="button" onClick={onEnquire} aria-haspopup="dialog" className="flex min-h-12 w-full items-center justify-between gap-3 rounded border border-[#e4c68d] bg-[#ecd2a0] px-4 py-3 text-left text-[11px] font-semibold text-[#173c2d] transition-colors hover:bg-[#f6dfb3]">
+              <button type="button" onClick={onEnquire} aria-haspopup="dialog" className="flex min-h-12 w-full items-center justify-between gap-3 rounded border border-[#e4c68d] bg-[#ecd2a0] px-4 py-3 text-left text-[15px] font-semibold text-[#173c2d] transition-colors hover:bg-[#f6dfb3]">
                 Ask our admissions team <ArrowUpRight size={17} aria-hidden="true" />
               </button>
               <a href="tel:+917455997333" className="mt-5 flex items-center gap-3 rounded-sm py-1 text-[#ead6ab] transition-colors hover:text-white">
                 <Phone size={16} strokeWidth={1.4} aria-hidden="true" />
-                <span><span className="block text-[8px] tracking-[.5px] text-[#afc3a8]">OR CALL US DIRECTLY</span><span className="mt-1 block font-serif text-[23px] leading-[1.3]">+91 74559 97333</span></span>
+                <span><span className="block text-[12px] tracking-[.5px] text-[#afc3a8]">OR CALL US DIRECTLY</span><span className="mt-1 block font-serif text-[23px] leading-[1.3]">+91 74559 97333</span></span>
               </a>
-              <p className="mt-6 border-t border-[#d6c28b26] pt-4 text-[9px] leading-[1.7] text-[#afc3a8]">For families in Siliguri & North East India.<br /><span className="text-[#d8d0ad]">Boys’ boarding · Classes 3–12</span></p>
+              <p className="mt-6 border-t border-[#d6c28b26] pt-4 text-[13px] leading-[1.7] text-[#afc3a8]">For families in Siliguri & North East India.<br /><span className="text-[#d8d0ad]">Boys’ boarding · Classes 3–12</span></p>
             </div>
           </aside>
         </div>

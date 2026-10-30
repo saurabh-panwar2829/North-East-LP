@@ -32,3 +32,14 @@ test('prepares an encoded draft addressed only to school admissions', () => {
   assert.match(url.searchParams.get('body'), /Class|class/);
   assert.equal(url.searchParams.has('cc'), false);
 });
+test('accepts an optional admission drive city and rejects unknown ones', () => {
+  assert.equal(validateEnquiry(valid).data.drive, '');
+  assert.equal(validateEnquiry({ ...valid, drive: 'Guwahati' }).data.drive, 'Guwahati');
+  assert.ok(validateEnquiry({ ...valid, drive: 'Kolkata' }).errors.drive);
+});
+test('names the admission drive city in the email draft', () => {
+  const url = new URL(createEnquiryEmail({ ...valid, drive: 'Shillong' }));
+  assert.match(url.searchParams.get('subject'), /admission drive · Shillong/);
+  assert.match(url.searchParams.get('body'), /Admission drive: Shillong/);
+  assert.doesNotMatch(new URL(createEnquiryEmail({ ...valid, drive: '' })).searchParams.get('body'), /Admission drive/);
+});

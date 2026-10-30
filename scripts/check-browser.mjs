@@ -17,8 +17,9 @@ async function revealWholePage() {
   });
   await page.waitForFunction(() => !document.querySelector('[data-reveal-state="pending"]'), null, { timeout: 10000 });
   await page.evaluate(async () => {
-    const reveals = document.getAnimations().filter(animation => animation.effect?.target instanceof Element && animation.effect.target.matches('[data-reveal]'));
-    await Promise.all(reveals.map(animation => animation.finished.catch(() => {})));
+    // Wait for reveals and text entrances; the endless orbit and ticker never finish.
+    const entrances = document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity);
+    await Promise.all(entrances.map(animation => animation.finished.catch(() => {})));
   });
 }
 try {
@@ -27,12 +28,13 @@ try {
   await page.getByRole('heading', { name: /Excellence. Growth. A brighter future./ }).waitFor();
   assert.ok(await page.locator('[data-reveal-state="pending"]').count() > 0, 'Off-screen reveals are initialized');
   await revealWholePage();
-  for (const id of ['why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) {
+  for (const id of ['admission-drive', 'why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) {
     await page.locator(`#${id}`).scrollIntoViewIfNeeded();
   }
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.complete || img.getClientRects().length > 0).map(img => img.decode().catch(() => {}))); });
-  await page.locator('#life-at-dgs').scrollIntoViewIfNeeded();
-  await page.locator('#life-at-dgs').screenshot({ path: 'artifacts/school-life-desktop.png' });
+  await page.evaluate(() => { const card = document.querySelector('#life-at-dgs article'); window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .3, behavior: 'instant' }); });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'artifacts/school-life-desktop.png' });
   await page.locator('#boarding').scrollIntoViewIfNeeded();
   await page.locator('#boarding').screenshot({ path: 'artifacts/north-east-benefits-desktop.png', style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
   await page.locator('#faqs').scrollIntoViewIfNeeded();
@@ -128,13 +130,40 @@ try {
     await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
   }
 
-  await page.getByRole('button', { name: 'Explore Academics', exact: true }).click();
-  await page.getByRole('heading', { name: 'Curiosity today. Confidence tomorrow.' }).waitFor();
-  await page.getByRole('button', { name: 'Explore Academics', exact: true }).press('Space');
-  assert.equal(await page.locator('#school-life-details').isVisible(), false);
-  await page.getByRole('button', { name: 'Explore Boarding Life', exact: true }).click();
+  // Drive section: the football clip plays in the background; the content waits for the strike, then rises in.
+  const driveAt = top => page.evaluate(async top => {
+    const section = document.getElementById('admission-drive');
+    window.scrollTo({ top: section.getBoundingClientRect().top + scrollY - innerHeight * top, behavior: 'instant' });
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    return section.dataset.shot;
+  }, top);
+  assert.equal(await driveAt(.1), 'before', 'Drive content waits during the run-up');
+  assert.equal(await page.locator('.dgs-admission-drive-panel').evaluate(element => getComputedStyle(element).pointerEvents), 'none', 'Hidden drive content cannot be clicked');
+  assert.equal(await driveAt(-.5), 'after', 'Drive content arrives after the strike');
+  await page.waitForFunction(() => document.querySelector('.dgs-admission-drive-canvas').dataset.ready === 'true');
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: 'artifacts/admission-drive-desktop.png' });
+  await page.getByRole('button', { name: 'Register for the Guwahati admission drive', exact: true }).click();
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#drive').inputValue(), 'Guwahati', 'Drive card preselects its city');
+  assert.equal(await page.locator('#region').inputValue(), 'Assam', 'Drive card preselects its state');
+  assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent', 'Drive preset keeps typed details');
+  await page.getByRole('button', { name: 'Register for Guwahati', exact: true }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'hidden' });
+
+  // Scattered collage: cards start off to the side and settle into place as the section scrolls up; the page itself keeps scrolling.
+  const collageTravel = await page.evaluate(async () => {
+    const card = document.querySelector('#life-at-dgs article');
+    const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const offset = () => Math.abs(new DOMMatrix(getComputedStyle(card).transform).m41);
+    window.scrollTo({ top: document.getElementById('life-at-dgs').offsetTop - innerHeight, behavior: 'instant' }); await frame();
+    const scattered = offset();
+    window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .3, behavior: 'instant' }); await frame();
+    return { scattered, settled: offset() };
+  });
+  assert.ok(collageTravel.scattered > 100 && collageTravel.settled < 2, `Collage cards fly in and settle (${JSON.stringify(collageTravel)})`);
   await page.getByRole('heading', { name: 'New friendships. A sense of belonging.' }).waitFor();
-  await page.getByRole('button', { name: 'Explore Boarding Life', exact: true }).click();
   await page.getByRole('link', { name: 'Explore Life at DGS', exact: true }).click();
   await page.waitForURL('**/#programmes');
 
@@ -177,10 +206,15 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload({ waitUntil: 'networkidle' });
   await revealWholePage();
-  for (const id of ['why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+  for (const id of ['admission-drive', 'why-dgs', 'life-at-dgs', 'boarding', 'programmes', 'faqs']) await page.locator(`#${id}`).scrollIntoViewIfNeeded();
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.complete || img.getClientRects().length > 0).map(img => img.decode().catch(() => {}))); });
   await page.locator('#life-at-dgs').scrollIntoViewIfNeeded();
-  await page.locator('#life-at-dgs').screenshot({ path: 'artifacts/school-life-mobile.png', style: '.mobile-cta, header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.evaluate(() => { const section = document.getElementById('admission-drive'); window.scrollTo({ top: section.getBoundingClientRect().top + scrollY + innerHeight * .5, behavior: 'instant' }); });
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: 'artifacts/admission-drive-mobile.png' });
+  await page.evaluate(() => { const card = document.querySelector('#life-at-dgs article'); window.scrollTo({ top: card.getBoundingClientRect().top + scrollY - innerHeight * .25, behavior: 'instant' }); });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'artifacts/school-life-mobile.png' });
   await page.locator('#boarding').scrollIntoViewIfNeeded();
   await page.locator('#boarding').screenshot({ path: 'artifacts/north-east-benefits-mobile.png', style: '.mobile-cta, header, .skip-link, .scroll-progress { visibility: hidden; }' });
   await page.locator('#faqs').scrollIntoViewIfNeeded();
@@ -196,6 +230,8 @@ try {
   await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Boarding life' }).click();
   assert.equal(await page.locator('#mobile-menu').count(), 0);
   await page.waitForFunction(() => Math.abs(document.getElementById('boarding').getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 3);
+  // Let the smooth anchor scroll finish so it doesn't pull the page back after the jump to the top.
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-scrolling'));
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   await page.waitForFunction(() => getComputedStyle(document.querySelector('header'), '::before').opacity === '0');
   await page.screenshot({ path: 'artifacts/mobile.png', fullPage: true });
@@ -217,6 +253,9 @@ try {
   assert.equal(await page.locator('[data-reveal-state="pending"]').count(), 0);
   assert.equal(await page.locator('[data-reveal]').evaluateAll(elements => elements.every(element => getComputedStyle(element).opacity === '1')), true);
   assert.equal(await page.locator('.scroll-progress').evaluate(element => getComputedStyle(element).display), 'none');
+  assert.equal(await page.locator('#life-at-dgs article').first().evaluate(element => element.style.transform), '', 'Reduced motion leaves the collage cards in place');
+  assert.equal(await page.locator('.dgs-admission-drive-canvas').evaluate(element => getComputedStyle(element).display), 'none', 'Reduced motion shows the still strike instead of the scrubbed clip');
+  assert.equal(await page.locator('#admission-drive').evaluate(element => element.dataset.shot), undefined, 'Reduced motion shows the drive content straight away');
   assert.equal(await page.locator('.dgs-partners-section-partners').evaluate(element => getComputedStyle(element).animationName), 'none');
   assert.equal(await page.getByRole('button', { name: 'Pause programme rotation', exact: true }).isVisible(), false);
   const staticPage = await browser.newPage({ javaScriptEnabled: false });

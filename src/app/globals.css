@@ -1,8 +1,10 @@
 @import "tailwindcss" source("../");
 
 @theme inline {
-  --font-sans: var(--font-dm-sans), Arial, Helvetica, sans-serif;
-  --font-serif: var(--font-dm-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-figtree), Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  /* Every serif heading and accent renders at the same medium weight; optical size still follows font size. */
+  --font-serif--font-variation-settings: "wght" 500;
 }
 
 @theme {

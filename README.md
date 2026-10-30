@@ -36,7 +36,7 @@ ADMISSIONS_WEBHOOK_TOKEN=your-server-side-token
 NEXT_PUBLIC_SITE_URL=https://your-landing-page.example
 ```
 
-The server sends a JSON POST with `name`, `phone` (10 digits), `grade`, `region`, `city`, `interest`, `consent`, `session`, `source` and `submittedAt`. A token, if supplied, is sent in the `Authorization: Bearer` header. The webhook must return a successful HTTP status only after accepting the enquiry. Errors preserve the form and show a retry/call option. Secrets are never exposed to the browser. There is no built-in CRM or database.
+The server sends a JSON POST with `name`, `phone` (10 digits), `grade`, `region`, `city`, `interest`, `drive` (an admission-drive city, or empty), `consent`, `session`, `source` and `submittedAt`. A token, if supplied, is sent in the `Authorization: Bearer` header. The webhook must return a successful HTTP status only after accepting the enquiry. Errors preserve the form and show a retry/call option. Secrets are never exposed to the browser. There is no built-in CRM or database.
 
 Before connecting a public campaign, use the receiving CRM’s deduplication, spam controls and retention settings. Confirm the school’s current contact details, fees and admissions arrangements.
 
@@ -48,12 +48,14 @@ Before connecting a public campaign, use the receiving CRM’s deduplication, sp
 - `src/app/layout.tsx`: locally hosted fonts through `next/font/local`, Tailwind typography defaults and shared interaction utilities.
 - `src/components/admissions-form.tsx`: responsive two-column enquiry design, validation and delivery states.
 - `src/components/campus-hero.tsx`: bright campus hero, EducationWorld rankings, verified school facts and admissions entry point.
+- `src/components/admission-drive.tsx`: drive-city ticker; the North East admission drive section, whose background plays a scroll-scrubbed football shot before the content rises in; the drive schedule with per-city registration; and the four-step drive process. Drive dates and venues are edited in its `stops` list.
+- `src/components/rotating-word.tsx`: rotates North East home towns in the “From Siliguri.” heading, with a steady label for screen readers.
 - `src/components/site-header.tsx`: transparent overlay header, section navigation, mobile menu and admissions button; a compact light surface appears on scroll.
-- `src/components/school-life-section.tsx`: six-card school-life gallery, responsive layout and expandable activity details.
+- `src/components/school-life-section.tsx`: “A School Day” scattered photo collage whose cards fly in from the sides as the page scrolls.
 - `src/components/north-east-benefits.tsx`: North East family benefits, boarding eligibility and an admissions entry point.
 - `src/components/site-footer.tsx`: forest-green admissions footer, contact details, section links and privacy entry point.
 - `src/components/faq-section.tsx`: numbered question cards, animated single-open accordion and admissions guidance panel, styled entirely with Tailwind.
-- `src/components/site-motion.tsx`: progressive scroll reveals, browser-native entrance animations and reading progress.
+- `src/components/site-motion.tsx`: smooth scrolling, scroll reveals, line-by-line heading and letter-by-letter label entrances, hero photo shrink, image parallax and reveals, scroll-linked route and ticker effects, and reading progress.
 - `src/components/partners-section.tsx`: reference-inspired sports banner, circular partner logos and accessible programme details.
 - `src/lib/enquiry.ts`: shared validation and email preparation.
 - `src/app/api/enquiry/route.ts`: server validation and optional webhook delivery.
@@ -63,6 +65,18 @@ Before connecting a public campaign, use the receiving CRM’s deduplication, sp
 - `artifacts`: desktop and mobile preview screenshots.
 
 All layout, responsive, hover, focus and form-state styling uses Tailwind utility classes. Component-local `ui` objects group static class strings so Tailwind can discover them at build time. The `dgs-*` class names are only DOM hooks for descendant variants and motion, with no separate CSS rules. Shared theme tokens live in `globals.css`; fonts are loaded by Next.js. There are no CSS modules, custom keyframe stylesheets, `@apply` component rules or runtime CSS-in-JS. Installation follows the [Tailwind Next.js guide](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
+
+## North East admission drive
+
+A forest-green ticker of the drive cities leads into the forest-green “Meet DGS admissions, closer to home.” section directly below the hero (`#admission-drive`). On desktop it is a two-column layout. The left column holds the introduction, a register button and the phone number, with the four-step “How the drive works” timeline beneath them. The right column is a “Drive cities” schedule panel: one slim, fully clickable row for each of six cities (Siliguri, Guwahati, Gangtok, Shillong, Imphal and Dimapur) and an “Elsewhere in the North East?” strip for other states. On phones the schedule comes before the steps. The steps follow the admissions process already described in the FAQs. The header, footer and hero badge link to it.
+
+Each city’s **Register** button opens the enquiry form with that city selected in the “North East admission drive” field and its state selected under City / state. Anything the parent has already typed is kept. With a city selected, the submit button reads “Register for <city>”, and the email draft and webhook name the drive city. The field is optional: “Not now — just a callback” sends an ordinary enquiry.
+
+**Before launch:** no drive dates or venues are published. Each card shows “Date to be announced” until you fill in `date` and `venue` for that city in `stops` in `src/components/admission-drive.tsx`. To add or remove a city, update `DRIVE_CITIES` in `src/lib/enquiry.ts` and `stops` together; TypeScript flags any mismatch. Confirm the cities and the “the team gets in touch to confirm the venue” step with the admissions team. Previews: `artifacts/admission-drive-desktop.png` and `artifacts/admission-drive-mobile.png`.
+
+## Readability
+
+Body copy is 15–17px, labels and eyebrows are at least 11px, and the base size is 16px. The only smaller text is in the decorative “Learn · Belong · Become” stamp and the partner-logo captions, which must fit inside their circles. Small text on light backgrounds was darkened, keeping its hue, to at least 5:1 contrast against ivory. Accent headings are at least 4.6:1 and icons at least 3.4:1. Decorative marks (laurels, separators and stars) are unchanged. Light text on the green panels already met the contrast targets and kept its colours, but uses the larger sizes.
 
 ## Checks
 
@@ -80,7 +94,22 @@ The browser check uses installed Google Chrome on Windows; change `executablePat
 
 The compact forest-green footer uses a small admissions strip above three columns for school identity and contact details, navigation, and the campus address. The oversized decorative wordmark and repeated marketing copy have been removed; mobile groups the logo and contact details into one row. Callback and campus-visit buttons open the existing enquiry dialog. The previous separate final CTA has been folded into this footer.
 
-Sections reveal once using IntersectionObserver and Tailwind data-attribute variants, with short staggered timing for related cards. The browser's Web Animations API handles hero, menu, details and dialog entrances. A requestAnimationFrame-throttled scroll handler updates the reading-progress line. Hover treatments use Tailwind utilities. There is no animation library or scroll hijacking. Content is visible without JavaScript; reduced-motion preferences disable the reveals and progress line. Keyboard focus reveals pending content and cancels any entrance animation hiding the focused control. The browser check exercises these fallbacks alongside footer actions and mobile navigation.
+Sections reveal once using IntersectionObserver and Tailwind data-attribute variants. Related items cascade in with delays of up to six steps, and drive rows enter from the right (`data-reveal-from="right"`). The browser's Web Animations API handles the hero, menu, details and dialog entrances.
+
+The scroll-driven motion takes its cue from editorial portfolio sites, implemented in this project's own code:
+
+- **Smooth scrolling:** [Lenis](https://github.com/darkroomengineering/lenis), the only animation dependency, adds inertia to wheel scrolling. Touch scrolling stays native. It pauses while a dialog is open, and dialogs and the mobile menu scroll natively (`data-lenis-prevent`). In-page links glide to their section and still update the URL.
+- **Headings:** each section heading splits at its authored line breaks, and every line rises out of its own mask.
+- **Labels:** eyebrow labels type in letter by letter. Screen readers get the plain text.
+- **Route:** in the “Your roots stay with you” section, the paper plane flies along the route from Siliguri to Dehradun as the visitor scrolls, drawing its trail.
+- **Hero photograph:** the full-width campus image draws in to a rounded card as the visitor scrolls past it.
+- **Photo collage:** see the school-life section below.
+- **Images:** large images open from a smaller window as they arrive and drift with a gentle parallax.
+- **Ticker:** the forest-green drive-city ticker (large serif city names, alternating ivory and gold italic, gold diamond separators, softly faded edges) drifts on its own and speeds up, or reverses, with the scroll.
+- **Rotating town:** “From Siliguri.” cycles through North East home towns.
+- **Header links:** navigation labels roll to a fresh copy on hover.
+
+A requestAnimationFrame-throttled scroll handler drives the progress line and these scroll-linked effects. Content is visible without JavaScript. Reduced-motion preferences turn off smooth scrolling, the splits, scroll-linked effects, ticker, rotation, reveals and progress line, and restore the original markup. Keyboard focus reveals pending content and cancels any entrance animation hiding the focused control. The browser check exercises these fallbacks alongside footer actions and mobile navigation.
 
 Footer previews: `artifacts/footer-desktop.png` and `artifacts/footer-mobile.png`.
 
@@ -106,6 +135,8 @@ The original student hero was created with the **built-in image generation tool*
 
 Fonts are locally hosted; see the SIL Open Font License files in `public/fonts`. No external font requests, advertising scripts or analytics are included.
 
+**Typography:** headings, italic accents and other serif text use **Fraunces**. Body text, labels and buttons use **Figtree**. Both are Latin-subset variable fonts saved by `scripts/download-fonts.mjs`. Fraunces has an optical-size axis, so small headings get sturdier strokes and large ones get finer detail automatically. `globals.css` sets all serif text to weight 500 (`--font-serif--font-variation-settings`), so headings keep the presence of the previous DM Serif Display. Figtree has a larger x-height and more open letters than DM Sans, which helps readability on phones. Both pairings were compared on the live page at 1440px and 390px before switching. Font files total about 170KB: 20KB for Figtree and 148KB for Fraunces roman and italic.
+
 ## Current campus hero
 
 The current hero uses `public/images/hero-campus.png`, restored with its original desktop, tablet and mobile framing. It retains the ivory fade, rankings, transparent header and smooth entrance animations. The alternative misty-campus edit remains archived at `public/images/hero-campus-misty.png` and `public/images/hero-campus-misty.webp`, with its [edit prompt](docs/misty-hero-image.md).
@@ -120,9 +151,31 @@ The current illustrative background was created with the **built-in image genera
 
 ## School-life gallery
 
-The “A School Day with Room for More” section follows the supplied reference: an ivory introduction on the left and a three-column, two-row photo gallery on the right. Cards cover Academics, Sports, Creativity, Leadership, Life Skills and Boarding Life, with green title strips and expandable details. On phones the gallery uses two columns. “Explore Life at DGS” moves to the programmes section.
+“A School Day with Room for More” is a loose collage of six photo cards (Academics, Sports, Creativity, Leadership, Life Skills and Boarding Life). Each card holds its photo, heading and description, and the cards rest slightly tilted with staggered columns. As the page scrolls, each card flies in from a scattered position off to the side, rotating and scaling into place. The columns then drift at slightly different speeds. The page keeps scrolling normally throughout; nothing is pinned. Phones show one column of alternating cards, and tablets show two. With reduced motion, or without scripting, the cards simply rest in the collage. “Explore Life at DGS” moves to the programmes section.
 
 All six images were created with the **built-in image generation tool** to represent fictional North East Indian students. The optimized assets are saved in `public/images/life-at-dgs/`, with complete final prompts in [the image generation record](docs/life-at-dgs-images.md). They are identified as illustrative in alt text and the footer. Preview screenshots: `artifacts/school-life-desktop.png` and `artifacts/school-life-mobile.png`.
+
+## Football shot (admission drive background)
+
+The admission drive section opens with the football clip as its full-screen background. A sticky backdrop keeps the clip in view, and above the drive content there is a pre-roll of about 62% of the viewport height. As the visitor scrolls through it:
+
+1. The North East student runs up to the ball across the full screen. A “Scroll to take the shot” hint shows during the run-up.
+2. He strikes the ball (frame 28). At that moment a dark green veil fades over the background. The heading lines rise out of their masks, followed by the eyebrow, intro and buttons, then the drive-cities panel with its rows one by one, then the “How the drive works” steps.
+3. The follow-through keeps playing faintly behind the content.
+
+Scrolling back above the strike hides the content again and replays the run-up. Hidden content cannot be clicked.
+
+The section's negative scroll margin makes the header, footer and hero badge links land on the content with the shot already taken. Keyboard focus inside the section also shows the content.
+
+With reduced motion or without scripting, the pre-roll is removed and the content is always visible over a still of the strike. Screen readers get the content in every state.
+
+The 48 frames are in `public/images/football-shot/` (960×640 WebP, about 3.1 MB in all). They load only as the section approaches, coarse frames first, so scrubbing works early on slow connections and sharpens as the rest arrive. The canvas is drawn at no more than 1.25× device pixels.
+
+The clip is illustrative. It was generated with **Higgsfield (Kling 3.0, pro mode, 5 s, no sound)** from `public/images/life-at-dgs/sports.webp` as the start image. The first 3.2 seconds were then exported as frames in headless Chrome. Generation prompt:
+
+> The teenage footballer keeps running for one stride, plants his left foot beside the ball and strikes it powerfully with his right foot in a clean shooting motion. The ball launches fast and low, flying away to the left and out of frame. He follows through with his kicking leg high and arms out for balance, then lands and watches the shot with a confident smile. Fixed static camera, no zoom, no pan, no cuts. Realistic athletic body mechanics, natural motion blur on the ball, sunlit school playing field, background buildings and trees stay still. No text, no logos.
+
+(The generated ball flies to the right and the camera eases in slightly; both suit the layout.)
 
 ## North East family benefits
 
