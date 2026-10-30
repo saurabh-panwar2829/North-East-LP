@@ -57,7 +57,7 @@ function Laurel({ right = false }: { right?: boolean }) {
 export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
   return <section className={ui.hero} aria-labelledby="hero-heading">
     <div className={ui.scene}>
-      <Image className={ui.image} src="/images/hero-campus.png" alt="Illustrative admissions campaign: a sunlit school campus surrounded by gardens and the Dehradun foothills" fill sizes="(max-width: 700px) 1000px, 100vw" quality={85} preload />
+      <Image className={ui.image} src="/images/hero-campus-dgs.jpeg" alt="Doon Global School campus building, with students on the drive and the Dehradun foothills behind" fill sizes="(max-width: 700px) 1000px, 100vw" quality={85} preload />
       <div className={ui.fade} />
 
       <div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.inner}`}>
