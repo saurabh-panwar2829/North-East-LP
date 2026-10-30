@@ -1,5 +1,7 @@
 # School-life campaign images
 
+The school-life cards now use the existing DGS student photographs named `campus-academics.webp`, `campus-sports.webp`, `campus-creativity.webp`, `campus-leadership.webp`, `campus-life-skills.webp` and `campus-boarding.webp` in `public/images/life-at-dgs/`. They show science lab work, the football team, robotics, a house parade, music and study time respectively. The generation record below describes the earlier illustrative assets, which are retained for other sections.
+
 Generated using the built-in image generation tool on 28 October 2026. These are fictional, illustrative campaign scenes representing students from North East India, not documentary photographs of DGS students or facilities. Images were converted to 1200px WebP for the website; the original generated files remain untouched.
 
 ## academics

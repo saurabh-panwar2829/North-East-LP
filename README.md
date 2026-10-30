@@ -60,7 +60,7 @@ Before connecting a public campaign, use the receiving CRM’s deduplication, sp
 - `src/lib/enquiry.ts`: shared validation and email preparation.
 - `src/app/api/enquiry/route.ts`: server validation and optional webhook delivery.
 - `public/images`: supplied-school imagery, partner logos and generated campaign visuals.
-- `public/images/life-at-dgs`: six optimized WebP school-life images featuring fictional North East Indian students.
+- `public/images/life-at-dgs`: DGS student photographs (`campus-*.webp`) used in the school-life cards, alongside the earlier illustrative assets retained for other sections.
 - `docs/life-at-dgs-images.md`: full generation prompts and asset provenance for the school-life section.
 - `artifacts`: desktop and mobile preview screenshots.
 
@@ -153,7 +153,7 @@ The current illustrative background was created with the **built-in image genera
 
 “A School Day with Room for More” is a loose collage of six photo cards (Academics, Sports, Creativity, Leadership, Life Skills and Boarding Life). Each card holds its photo, heading and description, and the cards rest slightly tilted with staggered columns. As the page scrolls, each card flies in from a scattered position off to the side, rotating and scaling into place. The columns then drift at slightly different speeds. The page keeps scrolling normally throughout; nothing is pinned. Phones show one column of alternating cards, and tablets show two. With reduced motion, or without scripting, the cards simply rest in the collage. “Explore Life at DGS” moves to the programmes section.
 
-All six images were created with the **built-in image generation tool** to represent fictional North East Indian students. The optimized assets are saved in `public/images/life-at-dgs/`, with complete final prompts in [the image generation record](docs/life-at-dgs-images.md). They are identified as illustrative in alt text and the footer. Preview screenshots: `artifacts/school-life-desktop.png` and `artifacts/school-life-mobile.png`.
+The six cards use the existing DGS student photographs in `public/images/life-at-dgs/campus-*.webp`: science lab, football team, robotics, house parade, music and study time. Landscape frames keep the group activities visible, with descriptive alt text for each photo. The earlier generated assets remain available for other sections; their prompts are preserved in [the image generation record](docs/life-at-dgs-images.md). Preview screenshots: `artifacts/school-life-desktop.png` and `artifacts/school-life-mobile.png`.
 
 ## Football shot (admission drive background)
 

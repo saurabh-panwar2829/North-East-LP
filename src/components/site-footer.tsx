@@ -82,7 +82,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           <p>© {new Date().getFullYear()} Doon Global School. All rights reserved.</p>
           <div><button onClick={onPrivacy}>Privacy details</button><a className={ui.backToTop} href="#home">Back to top <span><ArrowUp size={15} aria-hidden="true" /></span></a></div>
         </div>
-        <p className={ui.credit}>Hero, student-life and partner visuals are illustrative. Campus photographs are from the school’s official website. Confirm current facilities, programme access and fees with admissions.</p>
+        <p className={ui.credit}>School-life cards feature DGS student photographs. Selected campaign visuals are illustrative. Campus photographs are from the school’s official website. Confirm current facilities, programme access and fees with admissions.</p>
       </div>
     </footer>
   );

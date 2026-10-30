@@ -25,42 +25,54 @@ const activities = [
   {
     id: "academics",
     title: "Academics",
-    alt: "Illustrative North East Indian student studying in a sunlit school library",
+    src: "/images/life-at-dgs/campus-academics.webp",
+    position: "55% center",
+    alt: "Doon Global School students examining specimens together in the science lab",
     heading: "Curiosity today. Confidence tomorrow.",
     description: "A strong CBSE foundation, with space to ask questions, discover new ideas and develop independent study habits.",
   },
   {
     id: "sports",
     title: "Sports",
-    alt: "Illustrative North East Indian student practising football on a school field",
+    src: "/images/life-at-dgs/campus-sports.webp",
+    position: "center",
+    alt: "Doon Global School football team standing together on the playing field",
     heading: "Find your game. Find your team.",
     description: "From football and cricket to basketball and athletics, sport brings opportunities to practise, work together and keep growing.",
   },
   {
     id: "creativity",
     title: "Creativity",
-    alt: "Illustrative North East Indian student building an educational robot",
+    src: "/images/life-at-dgs/campus-creativity.webp",
+    position: "60% center",
+    alt: "Doon Global School students building a wheeled model in a robotics activity",
     heading: "Big ideas begin with a little curiosity.",
     description: "Robotics, hands-on exploration and creative expression give young minds room to experiment, make and discover.",
   },
   {
     id: "leadership",
     title: "Leadership",
-    alt: "Illustrative North East Indian student in a school cadet uniform",
+    src: "/images/life-at-dgs/campus-leadership.webp",
+    position: "center",
+    alt: "Doon Global School students marching together behind their house flag",
     heading: "Small steps towards stronger selves.",
     description: "House activities, teamwork, service and opportunities including NCC and NSS help students practise responsibility and leadership.",
   },
   {
     id: "life-skills",
     title: "Life Skills",
-    alt: "Illustrative North East Indian student playing an acoustic guitar at school",
+    src: "/images/life-at-dgs/campus-life-skills.webp",
+    position: "center",
+    alt: "Doon Global School students singing and playing guitars, keyboard and drums",
     heading: "Confidence beyond the classroom.",
     description: "Music, shared activities and everyday school routines encourage self-expression, patience, collaboration and growing independence.",
   },
   {
     id: "boarding",
     title: "Boarding Life",
-    alt: "Illustrative North East Indian students sharing a friendly moment in a boarding common room",
+    src: "/images/life-at-dgs/campus-boarding.webp",
+    position: "65% center",
+    alt: "Doon Global School student working in a notebook during study time",
     heading: "New friendships. A sense of belonging.",
     description: "A residential experience for boys in Classes 3–12, with time for study, shared routines, friendship and the everyday discoveries of growing up.",
   },
@@ -68,12 +80,12 @@ const activities = [
 
 // Resting tilt, photo shape and the scattered point each card flies in from (x and y as fractions of the viewport).
 const layout = [
-  { rest: -2.4, aspect: "4 / 5", from: { x: -.46, y: .16, r: -18 } },
-  { rest: 1.8, aspect: "1 / 1", from: { x: .1, y: .3, r: 14 } },
-  { rest: -1.2, aspect: "4 / 5", from: { x: .5, y: .14, r: 17 } },
-  { rest: 2.1, aspect: "1 / 1", from: { x: -.5, y: .12, r: 15 } },
-  { rest: -1.9, aspect: "4 / 5", from: { x: -.12, y: .26, r: -13 } },
-  { rest: 1.4, aspect: "1 / 1", from: { x: .52, y: .14, r: -16 } },
+  { rest: -2.4, aspect: "4 / 3", from: { x: -.46, y: .16, r: -18 } },
+  { rest: 1.8, aspect: "3 / 2", from: { x: .1, y: .3, r: 14 } },
+  { rest: -1.2, aspect: "4 / 3", from: { x: .5, y: .14, r: 17 } },
+  { rest: 2.1, aspect: "3 / 2", from: { x: -.5, y: .12, r: 15 } },
+  { rest: -1.9, aspect: "3 / 2", from: { x: -.12, y: .26, r: -13 } },
+  { rest: 1.4, aspect: "4 / 3", from: { x: .52, y: .14, r: -16 } },
 ];
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
@@ -142,7 +154,7 @@ export default function SchoolLifeSection() {
           {activities.map((activity, index) => (
             <article className={ui.card} key={activity.id} style={{ "--rest-r": `${layout[index].rest}deg` } as React.CSSProperties}>
               <span className={ui.photo} style={{ aspectRatio: layout[index].aspect }}>
-                <Image src={`/images/life-at-dgs/${activity.id}.webp`} alt={activity.alt} fill sizes="(max-width: 600px) 82vw, (max-width: 900px) 44vw, 400px" />
+                <Image src={activity.src} alt={activity.alt} fill sizes="(max-width: 600px) 82vw, (max-width: 900px) 44vw, 400px" style={{ objectPosition: activity.position }} />
               </span>
               <div className={ui.text}>
                 <p className={ui.label}>{String(index + 1).padStart(2, "0")} — {activity.title}</p>
