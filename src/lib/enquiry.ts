@@ -25,10 +25,24 @@ export function validateEnquiry(input: unknown): { data?: Enquiry; errors: Recor
   return Object.keys(errors).length ? { errors } : { data, errors };
 }
 
-export function createEnquiryEmail(data: Enquiry) {
+export const ADMISSIONS_EMAIL = "admissions@doonglobalschool.edu.in";
+export const ADMISSIONS_WHATSAPP = "918650728951";
+export const ADMISSIONS_WHATSAPP_LABEL = "+91 86507 28951";
+
+function enquiryMessage(data: Enquiry) {
   const place = data.region;
   const subject = `${data.drive ? `2027–28 admission drive · ${data.drive}` : "2027–28 boarding enquiry"} · Class ${data.grade} · ${place}`;
   const request = data.drive ? `I would like to register for the North East admission drive in ${data.drive} for the 2027–28 session.` : "I would like to request a callback about the 2027–28 session.";
   const body = `Hello Doon Global School Admissions,\n\n${request}\n\nParent / guardian: ${data.name}\nMobile: +91 ${data.phone}\nChild’s class: ${data.grade}\nCity: ${place}\nInterested in: ${data.interest}\n${data.drive ? `Admission drive: ${data.drive}\n` : ""}\nPlease share the admissions process, fees, boarding arrangements and programmes available for this class.\n\nThank you,\n${data.name}`;
-  return `mailto:admissions@doonglobalschool.edu.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return { subject, body };
+}
+
+export function createEnquiryEmail(data: Enquiry) {
+  const { subject, body } = enquiryMessage(data);
+  return `mailto:${ADMISSIONS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// Opens a WhatsApp chat with admissions, with the same enquiry text pre-filled.
+export function createEnquiryWhatsApp(data: Enquiry) {
+  return `https://wa.me/${ADMISSIONS_WHATSAPP}?text=${encodeURIComponent(enquiryMessage(data).body)}`;
 }

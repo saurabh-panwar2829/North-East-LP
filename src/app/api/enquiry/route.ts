@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createEnquiryEmail, validateEnquiry } from "@/lib/enquiry";
+import { createEnquiryEmail, createEnquiryWhatsApp, validateEnquiry } from "@/lib/enquiry";
 
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   const { data, errors } = validateEnquiry(input);
   if (!data) return NextResponse.json({ errors }, { status: 400 });
   const webhook = process.env.ADMISSIONS_WEBHOOK_URL;
-  if (!webhook) return NextResponse.json({ delivery: "email", emailUrl: createEnquiryEmail(data) }, { headers: { "Cache-Control": "no-store" } });
+  if (!webhook) return NextResponse.json({ delivery: "email", emailUrl: createEnquiryEmail(data), whatsappUrl: createEnquiryWhatsApp(data) }, { headers: { "Cache-Control": "no-store" } });
   try {
     if (new URL(webhook).protocol !== "https:") throw new Error("HTTPS required");
     const { website: _honeypot, ...enquiry } = data;

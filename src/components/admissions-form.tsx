@@ -2,7 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
-import { ArrowRight, CalendarDays, CheckCircle2, ChevronDown, GraduationCap, LoaderCircle, LockKeyhole, Mail, MapPin, Phone, User } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, ChevronDown, GraduationCap, LoaderCircle, LockKeyhole, Mail, MapPin, MessageCircle, Phone, User } from "lucide-react";
 import { CLASS_OPTIONS, DRIVE_CITIES, INTERESTS, REGIONS, validateEnquiry, type Enquiry } from "@/lib/enquiry";
 import type { EnquiryPreset } from "@/components/admission-drive";
 
@@ -37,6 +37,8 @@ const ui: Record<string, string> = {
   result: "dgs-admissions-form-result flex flex-col items-center text-center min-h-[360px] pt-[25px] pr-[5px] pb-[35px] pl-[5px] outline-offset-[3px] [&_h3]:mt-2.5 [&_h3]:font-serif [&_h3]:text-[31px] [&_h3]:leading-[1.1] [&_h3]:tracking-[-.7px] [&_>_p]:mt-4 [&_>_p]:max-w-[325px] [&_>_p]:text-[#626b59] [&_>_p]:text-[16px] [&_>_p]:leading-[1.85] [&_.dgs-admissions-form-submit]:mt-[25px] [&_.dgs-admissions-form-submit]:max-w-[320px] max-[700px]:min-h-0 max-[700px]:pt-4.5 max-[700px]:pr-0 max-[700px]:pb-7.5 max-[700px]:pl-0 max-[700px]:[&_h3]:text-[29px] max-[700px]:[&_>_p]:text-[15px]",
   resultIcon: "dgs-admissions-form-resultIcon w-[65px] h-[65px] grid place-items-center [border:1px_solid_#c9d6b9] rounded-full bg-[#edf2e4] text-[#556f44] shadow-[0_0_0_8px_#edf2e455] [&_svg]:stroke-[1.2]",
   resultLabel: "dgs-admissions-form-resultLabel mt-6.5 text-[#606c4c] text-[12px] tracking-[1.3px] font-semibold",
+  whatsapp: "dgs-admissions-form-whatsapp flex items-center justify-between gap-4.5 w-full min-h-12 mt-5 pt-[13px] pr-[17px] pb-[13px] pl-[17px] [border:1px_solid_#1f9d55] rounded-[5px] bg-[#25a35e] text-[#fff] text-[16px] font-semibold [transition:background_.2s] [&:hover]:bg-[#1f8f52] [&_>_span]:flex [&_>_span]:items-center [&_>_span]:gap-2.5",
+  email: "dgs-admissions-form-email flex items-center justify-between gap-4.5 w-full min-h-12 mt-3 pt-[13px] pr-[17px] pb-[13px] pl-[17px] [border:1px_solid_#073c32] rounded-[5px] bg-[transparent] text-[#073c32] text-[16px] font-semibold [transition:background_.2s] [&:hover]:bg-[#073c320d] [&_>_span]:flex [&_>_span]:items-center [&_>_span]:gap-2.5",
   resultPhone: "dgs-admissions-form-resultPhone flex items-center gap-2 mt-5.5 text-[17px] font-medium text-[#48643c]",
   back: "dgs-admissions-form-back [border:0] [border-bottom:1px_solid_#a9b697] pt-0 pr-0 pb-[3px] pl-0 bg-[transparent] text-[#616b55] text-[14px] mt-5",
   spinner: "dgs-admissions-form-spinner animate-spin",
@@ -55,7 +57,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
     if (preset) { setRegion(preset.region); setDrive(preset.drive); }
   }
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ delivery: string; emailUrl?: string } | null>(null);
+  const [result, setResult] = useState<{ delivery: string; emailUrl?: string; whatsappUrl?: string } | null>(null);
   const [draft, setDraft] = useState<Enquiry | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -122,8 +124,9 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
             <span className={ui.resultIcon}>{result.delivery === "sent" ? <CheckCircle2 size={29} /> : <Mail size={29} />}</span>
             <span className={ui.resultLabel}>{result.delivery === "sent" ? "REQUEST RECEIVED" : "ONE LAST STEP"}</span>
             <h3>{result.delivery === "sent" ? "Your journey starts here." : "Your enquiry is ready."}</h3>
-            <p>{result.delivery === "sent" ? "Your callback request has been delivered to the admissions team. We look forward to speaking with you." : "Open your email app to review and send your details to admissions. Your enquiry has not been sent yet."}</p>
-            {result.emailUrl && <a className={ui.submit} href={result.emailUrl}>Open email & send <ArrowRight size={18} aria-hidden="true" /></a>}
+            <p>{result.delivery === "sent" ? "Your callback request has been delivered to the admissions team. We look forward to speaking with you." : "Send your details to admissions on WhatsApp, or open your email app to review and send. Your enquiry has not been sent yet."}</p>
+            {result.whatsappUrl && <a className={ui.whatsapp} href={result.whatsappUrl} target="_blank" rel="noopener noreferrer"><span><MessageCircle size={18} aria-hidden="true" /> Send on WhatsApp</span><ArrowRight size={18} aria-hidden="true" /></a>}
+            {result.emailUrl && <a className={ui.email} href={result.emailUrl}><span><Mail size={18} aria-hidden="true" /> Open email & send</span><ArrowRight size={18} aria-hidden="true" /></a>}
             <a className={ui.resultPhone} href="tel:+917455997333"><Phone size={15} aria-hidden="true" /> +91 74559 97333</a>
             <button className={ui.back} onClick={() => setResult(null)}>Back to enquiry form</button>
           </div>

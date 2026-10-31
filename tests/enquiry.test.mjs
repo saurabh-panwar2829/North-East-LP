@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateEnquiry, createEnquiryEmail } from '../src/lib/enquiry.ts';
+import { validateEnquiry, createEnquiryEmail, createEnquiryWhatsApp } from '../src/lib/enquiry.ts';
 
 const valid = { name: 'Test Parent', phone: '9876543210', grade: '6', region: 'Siliguri', city: '', interest: 'Boarding admissions', consent: true, website: '' };
 test('normalizes Indian international and spaced phone numbers', () => {
@@ -47,4 +47,13 @@ test('names the admission drive city in the email draft', () => {
   assert.match(url.searchParams.get('subject'), /admission drive · Kolkata/);
   assert.match(url.searchParams.get('body'), /Admission drive: Kolkata/);
   assert.doesNotMatch(new URL(createEnquiryEmail({ ...valid, drive: '' })).searchParams.get('body'), /Admission drive/);
+});
+test('prepares a WhatsApp chat with admissions carrying the same enquiry text', () => {
+  const url = new URL(createEnquiryWhatsApp({ ...valid, name: 'Parent & Guardian', drive: 'Kolkata' }));
+  assert.equal(url.origin + url.pathname, 'https://wa.me/918650728951');
+  const text = url.searchParams.get('text');
+  assert.match(text, /Parent & Guardian/);
+  assert.ok(text.includes('Mobile: +91 9876543210'));
+  assert.match(text, /Admission drive: Kolkata/);
+  assert.equal(text, new URL(createEnquiryEmail({ ...valid, name: 'Parent & Guardian', drive: 'Kolkata' })).searchParams.get('body'));
 });
