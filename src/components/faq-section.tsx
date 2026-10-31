@@ -2,31 +2,32 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import { ArrowUpRight, MessageCircle, Phone, Plus } from "lucide-react";
+import { ADMISSION_CITY_LABEL } from "@/lib/enquiry";
 
 const questions = [
   {
-    question: "Can students from Siliguri and the North East apply?",
-    answer: "Yes. Families from Siliguri, North Bengal, Sikkim and all North Eastern states can enquire about admission at the Dehradun campus. The team can explain the application, assessment and documents needed for your child’s class.",
+    question: "Which cities are covered by the admission drive?",
+    answer: `The admissions team is meeting families from ${ADMISSION_CITY_LABEL} for the 2027–28 session. Register for your city and the team will confirm the venue, date and time, and walk you through the application, assessment and documents for your child’s class.`,
   },
   {
     question: "Which classes are eligible for boarding?",
-    answer: "Doon Global School offers boys’ boarding from Class 3 to Class 12. Its co-educational day school offers Nursery to Class 12. Boarding admission is subject to the school’s assessment and availability.",
+    answer: "Boarding is for boys from Grade 3 to Class XII. The co-educational day school admits children from Nursery to Class XII, so younger children join as day scholars. The school is affiliated to CBSE, New Delhi (Affiliation No. 3530108), and Classes XI–XII offer Science with Mathematics, Science with Biology, Commerce and Humanities.",
   },
   {
     question: "What does the boarding fee cover?",
-    answer: "The school’s published term fee combines tuition, boarding and lodging. Books, uniforms, transport and personal expenses are separate. Ask admissions for the signed 2027–28 fee schedule and the full list of one-time and ongoing charges.",
+    answer: "For 2027–28 the term fee covers boarding, lodging and tuition: ₹1,50,000 per term for Grades 3–8, ₹1,55,000 for Grades 9–10, and ₹1,60,000 and ₹1,65,000 for the two terms of Grades 11–12. One-time charges of ₹90,000 apply at admission, including a ₹20,000 refundable security deposit. Basic in-house medical care is included; books, uniform, transport and personal expenses are not.",
   },
   {
     question: "Are uniforms, books and school essentials available?",
-    answer: "Ask the admissions team for the current uniform, books, stationery and boarding packing list. The school lists books and uniforms among items charged through the imprest account on actual usage; they are not advertised as complimentary.",
+    answer: "Yes. Books, uniform, stationery, laundry, excursions and CBSE fees for boarders are billed through an imprest account on actual usage, estimated at ₹35,000 a year, with a minimum balance of ₹5,000 to be maintained. The school shares written instructions on the uniform and packing list after admission, so please wait for those before buying anything.",
   },
   {
     question: "Are all activities and partner programmes included?",
-    answer: "Programme eligibility, timetables and any additional fees can vary by class and session. Tell admissions which activities interest your child so they can confirm the current options, including sports, robotics, NCC and partner programmes.",
+    answer: "Sports include cricket, football, basketball and athletics, alongside music, dance, art, debate and MUN, robotics, theatre, NCC and NSS. Partner programmes such as Bengaluru FC Soccer Schools, Kidnasium, Prayaas mock boards and Centurion Defence Academy run through the school. Options and schedules change by class and term, and some programmes may be charged separately, so ask admissions what applies to your child.",
   },
   {
     question: "How can we visit the campus or begin admissions?",
-    answer: "Start with an enquiry or call +91 74559 97333. The admissions team can help arrange a campus visit and explain the next steps: documents, entrance assessment where applicable, an interaction with the Principal, fees and orientation.",
+    answer: "Admission takes six steps: enquiry and registration, submission of documents, an entrance assessment for Grade I and above (about an hour, covering English, Mathematics, Science or EVS, and reasoning), an interaction with the Principal, fee payment with an offer letter, and orientation before the year begins. Call +91 74559 97333 or email admissions@doonglobalschool.edu.in to plan a campus visit at 14th Milestone, Chakrata Road, Jhajra, Dehradun.",
   },
 ];
 
@@ -133,7 +134,7 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
                 <Phone size={16} strokeWidth={1.4} aria-hidden="true" />
                 <span><span className="block text-[12px] tracking-[.5px] text-[#afc3a8]">OR CALL US DIRECTLY</span><span className="mt-1 block font-serif text-[23px] leading-[1.3]">+91 74559 97333</span></span>
               </a>
-              <p className="mt-6 border-t border-[#d6c28b26] pt-4 text-[13px] leading-[1.7] text-[#afc3a8]">For families in Siliguri & North East India.<br /><span className="text-[#d8d0ad]">Boys’ boarding · Classes 3–12</span></p>
+              <p className="mt-6 border-t border-[#d6c28b26] pt-4 text-[13px] leading-[1.7] text-[#afc3a8]">For families in our seven admission-drive cities.<br /><span className="text-[#d8d0ad]">Boys’ boarding · Classes 3–12</span></p>
             </div>
           </aside>
         </div>

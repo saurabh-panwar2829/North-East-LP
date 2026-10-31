@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight, ArrowUp, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { ADMISSION_CITY_LABEL } from "@/lib/enquiry";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -46,7 +47,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           <div data-reveal>
             <p className={ui.eyebrow}><span aria-hidden="true" /> ADMISSIONS OPEN 2027–28</p>
             <h2>Their next chapter. <em>Let’s begin.</em></h2>
-            <p className={ui.invitationText}>Welcoming families from Siliguri & North East India.</p>
+            <p className={ui.invitationText}>Welcoming families from {ADMISSION_CITY_LABEL}.</p>
           </div>
           <div className={ui.admissions} data-reveal data-reveal-delay="1">
             <button className={ui.callback} onClick={onEnquire} aria-haspopup="dialog">Request an admissions callback <ArrowUpRight size={19} aria-hidden="true" /></button>

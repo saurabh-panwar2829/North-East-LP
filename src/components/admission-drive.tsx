@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ArrowUpRight, CalendarDays, ChevronDown, Phone } from "lucide-react";
-import type { DriveCity } from "@/lib/enquiry";
+import { ADMISSION_CITY_LABEL, DRIVE_CITIES, type DriveCity } from "@/lib/enquiry";
 
 export type EnquiryPreset = { drive: DriveCity; region: string };
 
+// The Bengaluru FC badge sits over the clip with the scroll hint and dissolves with it once the content rises.
 // Content waits off-stage until the striker hits the ball (`data-shot="before"`), then rises in; without motion it is always shown.
 const enter = "[transition:opacity_.7s_ease,_translate_.9s_cubic-bezier(.16,_1,_.3,_1)] group-data-[shot=before]/drive:opacity-0 group-data-[shot=before]/drive:translate-y-6 motion-reduce:transition-none";
 
@@ -20,6 +21,7 @@ const ui: Record<string, string> = {
   edge: "dgs-admission-drive-edge absolute top-0 right-0 bottom-0 left-0 [background:linear-gradient(180deg,_#052c25a6_0%,_#052c2500_20%,_#052c2500_78%,_#073c32_100%)]",
   veil: "dgs-admission-drive-veil absolute top-0 right-0 bottom-0 left-0 [background:linear-gradient(90deg,_#052c25f7_0%,_#052c25e6_40%,_#052c25c2_68%,_#052c25a8_100%)] [transition:opacity_.9s_ease] group-data-[shot=before]/drive:opacity-0 max-[1100px]:[background:linear-gradient(180deg,_#052c25e6,_#052c25d4)] motion-reduce:transition-none",
   hint: "dgs-admission-drive-hint absolute top-[24svh] left-[max(32px,_calc((100vw_-_1280px)_/_2))] flex items-center gap-3 text-[#fffbee] text-[12px] font-semibold tracking-[2.2px] [text-shadow:0_2px_14px_#000a] opacity-0 [transition:opacity_.5s_ease] group-data-[shot=before]/drive:opacity-100 [&_>_svg]:text-[#e4c990] motion-safe:[&_>_svg]:animate-bounce max-[600px]:left-5 max-[600px]:top-[14svh] max-[600px]:text-[11px]",
+  badge: "dgs-admission-drive-badge absolute top-[24svh] right-[max(32px,_calc((100vw_-_1280px)_/_2))] flex items-center gap-3.5 pt-2 pr-4 pb-2 pl-2 [border:1px_solid_#ffffff2e] rounded-[10px] bg-[#052c25b8] [backdrop-filter:blur(12px)] shadow-[0_12px_32px_#00140f4d] text-[#fffbee] opacity-0 [transition:opacity_.7s_ease_.3s] group-data-[shot=before]/drive:opacity-100 group-data-[shot=before]/drive:[transition-delay:0s] motion-reduce:transition-none [&_>_span]:grid [&_>_span]:place-items-center [&_>_span]:flex-none [&_>_span]:w-13 [&_>_span]:h-13 [&_>_span]:rounded-[7px] [&_>_span]:bg-[#fff] [&_>_span]:p-1 [&_img]:w-auto [&_img]:h-11 [&_>_div]:grid [&_>_div]:gap-0.5 [&_b]:text-[10px] [&_b]:font-semibold [&_b]:tracking-[1.8px] [&_b]:text-[#d9c08a] [&_em]:font-serif [&_em]:not-italic [&_em]:text-[15px] [&_em]:leading-[1.25] [&_em]:tracking-[-.2px] [&_em]:whitespace-nowrap max-[600px]:top-[14svh] max-[600px]:right-5 max-[600px]:gap-0 max-[600px]:pr-2 max-[600px]:[&_>_div]:sr-only max-[600px]:[&_>_span]:w-11 max-[600px]:[&_>_span]:h-11 max-[600px]:[&_img]:h-9",
   content: "dgs-admission-drive-content relative z-1 pt-[calc(62svh_+_72px)] pb-18 max-[1100px]:pt-[calc(62svh_+_56px)] max-[1100px]:pb-14 max-[600px]:pt-[calc(62svh_+_44px)] max-[600px]:pb-11 motion-reduce:pt-18 [@media(scripting:none)]:pt-18 group-data-[shot=before]/drive:pointer-events-none",
   ticker: "dgs-admission-drive-ticker relative overflow-hidden bg-[#052c25] text-[#fffbee] [border-block:1px_solid_#c9ae7259] [&::before]:content-[''] [&::before]:absolute [&::before]:top-0 [&::before]:bottom-0 [&::before]:left-0 [&::before]:z-1 [&::before]:w-[12%] [&::before]:[background:linear-gradient(90deg,_#052c25,_#052c2500)] [&::after]:content-[''] [&::after]:absolute [&::after]:top-0 [&::after]:bottom-0 [&::after]:right-0 [&::after]:z-1 [&::after]:w-[12%] [&::after]:[background:linear-gradient(270deg,_#052c25,_#052c2500)] [&::before]:pointer-events-none [&::after]:pointer-events-none",
   tickerTrack: "dgs-admission-drive-tickerTrack flex w-max will-change-transform",
@@ -49,14 +51,7 @@ const ui: Record<string, string> = {
 
 
 // Add each confirmed date and venue here. An empty date shows “Date to be announced”.
-const stops: { city: DriveCity; region: string; covers: string; date: string; venue: string }[] = [
-  { city: "Siliguri", region: "Siliguri", covers: "North Bengal & Darjeeling", date: "", venue: "" },
-  { city: "Guwahati", region: "Assam", covers: "Assam", date: "", venue: "" },
-  { city: "Gangtok", region: "Sikkim", covers: "Sikkim", date: "", venue: "" },
-  { city: "Shillong", region: "Meghalaya", covers: "Meghalaya", date: "", venue: "" },
-  { city: "Imphal", region: "Manipur", covers: "Manipur", date: "", venue: "" },
-  { city: "Dimapur", region: "Nagaland", covers: "Nagaland", date: "", venue: "" },
-];
+const stops = DRIVE_CITIES.map(city => ({ city, date: "", venue: "" }));
 
 const steps = [
   { title: "Register your city", description: "Share a few details. It takes about a minute." },
@@ -183,13 +178,17 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
         <div className={ui.edge} />
         <div className={ui.veil} />
         <p className={ui.hint} aria-hidden="true">SCROLL TO TAKE THE SHOT <ChevronDown size={16} /></p>
+        <div className={ui.badge}>
+          <span><Image src="/images/bengaluru.webp" alt="Bengaluru FC" width={44} height={56} /></span>
+          <div><b>FOOTBALL PROGRAMME</b><em>In association with<br />Bengaluru FC Soccer Schools</em></div>
+        </div>
       </div>
       <div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.content}`}>
         <div className={ui.layout}>
           <div className={ui.intro}>
             <p className={`${ui.eyebrow} ${enter}`}><span aria-hidden="true" /> NORTH EAST ADMISSION DRIVE · 2027–28</p>
             <h2 id="admission-drive-heading"><span className={ui.line}><span>Meet DGS admissions,</span></span><br /><span className={ui.line}><em style={{ transitionDelay: "110ms" }}>closer to home.</em></span></h2>
-            <p className={enter} style={{ transitionDelay: "160ms" }}>The admissions team is meeting families across Siliguri, Sikkim and the North East. Register for your city and we’ll share the venue, date and time once confirmed.</p>
+            <p className={enter} style={{ transitionDelay: "160ms" }}>The admissions team is meeting families in {ADMISSION_CITY_LABEL}. Register for your city and we’ll share the venue, date and time once confirmed.</p>
             <div className={`${ui.actions} ${enter}`} style={{ transitionDelay: "240ms" }}>
               <button className={ui.register} onClick={onEnquire} aria-haspopup="dialog">Register your interest <ArrowUpRight size={18} aria-hidden="true" /></button>
               <a className={ui.call} href="tel:+917455997333"><Phone size={16} aria-hidden="true" /> +91 74559 97333</a>
@@ -199,10 +198,10 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
           <div className={ui.panel}>
             <div className={ui.panelHead}><span>DRIVE CITIES · 2027–28</span><span className={ui.status}><span aria-hidden="true" /> Registrations open</span></div>
             <ul className={ui.stops} aria-label="Admission drive cities">
-              {stops.map(({ city, region, covers, date, venue }, index) => (
+              {stops.map(({ city, date, venue }, index) => (
                 <li key={city} style={{ transitionDelay: `${300 + index * 70}ms` }}>
-                  <button className={ui.stop} onClick={() => onRegister({ drive: city, region })} aria-haspopup="dialog" aria-label={`Register for the ${city} admission drive`} aria-describedby={`drive-${city}-date`}>
-                    <span className={ui.city}><span>{city}</span><span>{covers.toUpperCase()}</span></span>
+                  <button className={ui.stop} onClick={() => onRegister({ drive: city, region: city })} aria-haspopup="dialog" aria-label={`Register for the ${city} admission drive`} aria-describedby={`drive-${city}-date`}>
+                    <span className={ui.city}><span>{city}</span><span>MEET THE ADMISSIONS TEAM</span></span>
                     <span className={ui.date} id={`drive-${city}-date`} data-pending={!date}><CalendarDays size={15} aria-hidden="true" />{date ? `${date}${venue ? ` · ${venue}` : ""}` : "Date to be announced"}</span>
                     <span className={ui.action}><span>Register</span><span className={ui.arrow}><ArrowUpRight size={16} aria-hidden="true" /></span></span>
                   </button>
@@ -211,8 +210,8 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
             </ul>
             <div className={ui.elsewhere}>
               <div>
-                <p>Elsewhere in <em>the North East?</em></p>
-                <p>Arunachal Pradesh, Mizoram, Tripura and beyond.</p>
+                <p>Questions about <em>the admission drive?</em></p>
+                <p>Speak with our team about your city’s session.</p>
               </div>
               <button className={ui.talk} onClick={onEnquire} aria-haspopup="dialog">Talk to admissions <ArrowUpRight size={16} aria-hidden="true" /></button>
             </div>

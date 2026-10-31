@@ -146,16 +146,11 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
                 {error("grade")}
               </div>
               <div className={ui.field}>
-                <label htmlFor="region">City / state <span>*</span></label>
+                <label htmlFor="region">City <span>*</span></label>
                 <div className={ui.input}><MapPin aria-hidden="true" /><select id="region" name="region" value={region} onChange={event => setRegion(event.target.value)} required aria-invalid={!!errors.region} aria-describedby={errors.region ? "region-error" : undefined}>{REGIONS.map(city => <option key={city}>{city}</option>)}</select><ChevronDown className={ui.chevron} aria-hidden="true" /></div>
                 {error("region")}
               </div>
             </div>
-            {region === "Other" && <div className={ui.field}>
-              <label htmlFor="city">Your city <span>*</span></label>
-              <div className={ui.input}><MapPin aria-hidden="true" /><input id="city" name="city" defaultValue={draft?.city ?? ""} placeholder="Enter your city" autoComplete="address-level2" maxLength={80} required aria-invalid={!!errors.city} aria-describedby={errors.city ? "city-error" : undefined} /></div>
-              {error("city")}
-            </div>}
             <div className={ui.field}>
               <label htmlFor="drive">North East admission drive</label>
               <div className={ui.input}><CalendarDays aria-hidden="true" /><select id="drive" name="drive" value={drive} onChange={event => setDrive(event.target.value)} aria-invalid={!!errors.drive} aria-describedby={errors.drive ? "drive-error" : undefined}><option value="">Not now — just a callback</option>{DRIVE_CITIES.map(city => <option key={city} value={city}>Register for {city}</option>)}</select><ChevronDown className={ui.chevron} aria-hidden="true" /></div>

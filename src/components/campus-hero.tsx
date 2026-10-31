@@ -62,7 +62,7 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
 
       <div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.inner}`}>
         <div className={ui.copy}>
-          <p className={ui.eyebrow}><span /> SILIGURI & NORTH EAST INDIA</p>
+          <p className={ui.eyebrow}><span /> NORTH EAST INDIA</p>
           <h1 id="hero-heading"><span className={ui.titleLine}><span className={ui.titleText}>Excellence. Growth.</span></span><span className={ui.titleLine}><em className={ui.titleText}>A brighter future.</em></span></h1>
           <p className={ui.description}>A new chapter in Dehradun. A world of possibilities.<br className={ui.desktopBreak} /> Discover a CBSE boarding school where your child<br className={ui.desktopBreak} /> finds the space to learn, belong and become.</p>
 
@@ -93,7 +93,7 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
     <div className={ui.facts}><div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.factsInner}`}>
       <p>Rooted in values.<br /><em>Growing towards tomorrow.</em></p>
       <div className={ui.fact}><BookOpen /><div><strong>Since 1998</strong><span>A legacy of learning</span></div></div>
-      <div className={ui.fact}><ShieldCheck /><div><strong>CBSE</strong><span>Affiliated curriculum</span></div></div>
+      <div className={ui.fact}><ShieldCheck /><div><strong>CBSE</strong><span>Affiliated curriculum · 28 years</span></div></div>
       <div className={ui.fact}><GraduationCap /><div><strong>Classes 3–12</strong><span>Boys’ boarding in Dehradun</span></div></div>
     </div></div>
   </section>;

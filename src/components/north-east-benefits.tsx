@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight, Compass, GraduationCap, House, MapPin, Users } from "lucide-react";
+import { ADMISSION_CITY_LABEL } from "@/lib/enquiry";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -53,7 +54,7 @@ export default function NorthEastBenefits({ onEnquire }: { onEnquire: () => void
             <p className={ui.eyebrow}><span aria-hidden="true" /> FOR FAMILIES IN SILIGURI & NORTH EAST INDIA</p>
             <h2 id="north-east-heading">North East roots.<br /><em>Brighter horizons.</em></h2>
           </div>
-          <p className={ui.introduction}>From Siliguri, Sikkim and across the North East, discover what a new chapter at DGS can offer your child—inside and beyond the classroom.</p>
+          <p className={ui.introduction}>For families from {ADMISSION_CITY_LABEL}, discover what a new chapter at DGS can offer your child—inside and beyond the classroom.</p>
         </div>
 
         <div className={ui.content}>

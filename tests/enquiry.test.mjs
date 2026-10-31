@@ -20,10 +20,15 @@ test('rejects malformed phones, unknown regions and bot submissions', () => {
   assert.ok(validateEnquiry({ ...valid, website: 'bot' }).errors.form);
   assert.ok(validateEnquiry(null).errors.form);
 });
-test('requires a custom city only for Other', () => {
-  assert.ok(validateEnquiry({ ...valid, region: 'Other' }).errors.city);
-  assert.ok(validateEnquiry({ ...valid, region: 'Other', city: 'Kolkata' }).data);
-  assert.ok(validateEnquiry(valid).data);
+test('accepts only the seven admission cities for enquiries and drive registrations', () => {
+  for (const city of ['Guwahati', 'Aizawl', 'Itanagar', 'Jorhat', 'Dimapur', 'Siliguri', 'Kolkata']) {
+    assert.ok(validateEnquiry({ ...valid, region: city, drive: city }).data, city);
+  }
+  for (const city of ['Other', 'Gangtok', 'Shillong', 'Imphal', 'Assam', 'Sikkim']) {
+    const result = validateEnquiry({ ...valid, region: city, drive: city, city: 'Kolkata' });
+    assert.ok(result.errors.region, city);
+    assert.ok(result.errors.drive, city);
+  }
 });
 test('prepares an encoded draft addressed only to school admissions', () => {
   const url = new URL(createEnquiryEmail({ ...valid, name: 'Parent & Guardian' }));
@@ -35,11 +40,11 @@ test('prepares an encoded draft addressed only to school admissions', () => {
 test('accepts an optional admission drive city and rejects unknown ones', () => {
   assert.equal(validateEnquiry(valid).data.drive, '');
   assert.equal(validateEnquiry({ ...valid, drive: 'Guwahati' }).data.drive, 'Guwahati');
-  assert.ok(validateEnquiry({ ...valid, drive: 'Kolkata' }).errors.drive);
+  assert.ok(validateEnquiry({ ...valid, drive: 'Shillong' }).errors.drive);
 });
 test('names the admission drive city in the email draft', () => {
-  const url = new URL(createEnquiryEmail({ ...valid, drive: 'Shillong' }));
-  assert.match(url.searchParams.get('subject'), /admission drive · Shillong/);
-  assert.match(url.searchParams.get('body'), /Admission drive: Shillong/);
+  const url = new URL(createEnquiryEmail({ ...valid, drive: 'Kolkata' }));
+  assert.match(url.searchParams.get('subject'), /admission drive · Kolkata/);
+  assert.match(url.searchParams.get('body'), /Admission drive: Kolkata/);
   assert.doesNotMatch(new URL(createEnquiryEmail({ ...valid, drive: '' })).searchParams.get('body'), /Admission drive/);
 });

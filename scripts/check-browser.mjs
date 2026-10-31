@@ -64,10 +64,10 @@ try {
     sample(0);
     return { start, moved, durations: animations.map(animation => animation.effect.getTiming().duration), count: animations.length };
   });
-  assert.equal(orbit.count, 6, 'Only the outer track and five logo wrappers rotate');
+  assert.equal(orbit.count, 5, 'Only the outer track and four logo wrappers rotate');
   assert.ok(orbit.durations.every(duration => duration === 40000), 'A full orbit takes 40 seconds');
   assert.deepEqual(orbit.start.school, orbit.moved.school, 'Doon Global remains fixed at the centre');
-  for (let index = 0; index < 5; index++) {
+  for (let index = 0; index < 4; index++) {
     const before = orbit.start.badges[index];
     const after = orbit.moved.badges[index];
     assert.ok(Math.hypot(after.x - before.x, after.y - before.y) > 70, 'Partner moves around the circle');
@@ -108,8 +108,7 @@ try {
   await page.locator('#parent-name').fill('Preview Test Parent');
   await page.locator('#mobile').fill('9876543210');
   await page.locator('#grade').selectOption('6');
-  await page.locator('#region').selectOption('Other');
-  await page.locator('#city').fill('Guwahati');
+  await page.locator('#region').selectOption('Guwahati');
   await page.locator('[name="consent"]').check();
   await page.getByRole('button', { name: 'Request a callback' }).click();
   await page.getByRole('heading', { name: 'Your enquiry is ready.' }).waitFor();
@@ -146,7 +145,7 @@ try {
   await page.getByRole('button', { name: 'Register for the Guwahati admission drive', exact: true }).click();
   await page.getByRole('dialog', { name: 'Enquire for admissions', exact: true }).waitFor({ state: 'visible' });
   assert.equal(await page.locator('#drive').inputValue(), 'Guwahati', 'Drive card preselects its city');
-  assert.equal(await page.locator('#region').inputValue(), 'Assam', 'Drive card preselects its state');
+  assert.equal(await page.locator('#region').inputValue(), 'Guwahati', 'Drive card preselects its city in the enquiry form');
   assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent', 'Drive preset keeps typed details');
   await page.getByRole('button', { name: 'Register for Guwahati', exact: true }).waitFor();
   await page.keyboard.press('Escape');

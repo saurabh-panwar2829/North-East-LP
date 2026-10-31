@@ -24,7 +24,6 @@ const ui: Record<string, string> = {
   goalkeepers: "[&_img]:h-10 [&_img]:w-[79px]",
   bengaluru: "[&_img]:h-[51px] [&_img]:w-14",
   prayaas: "[&_img]:h-10 [&_img]:w-[79px] [&_span]:hidden",
-  centurion: "[&_img]:h-[51px] [&_img]:w-14",
   kidnasium: "[&_img]:h-[51px] [&_img]:w-14",
   note: "dgs-partners-section-note self-start justify-self-start mt-7 mr-0 mb-0 ml-4.5 font-serif italic text-[28px] leading-[1.25] tracking-[-.3px] [transform:rotate(-10deg)] [text-shadow:0_2px_15px_#001b16cc] max-[1150px]:text-[23px] max-[1150px]:mt-5.5 max-[1150px]:mr-0 max-[1150px]:mb-0 max-[1150px]:ml-2.5 max-[900px]:hidden",
   details: "dgs-partners-section-details [border-top:1px_solid_#bba86a44] bg-[#052f27] [&[hidden]]:hidden [&_h3]:mt-[7px] [&_h3]:font-serif [&_h3]:text-[26px] [&_h3]:leading-[1.2] [&_p]:text-[16px] [&_p]:text-[#e0e7d9] [&_small]:block [&_small]:mt-2 [&_small]:text-[13px] [&_small]:leading-[1.6] [&_small]:text-[#b1c0a9] [&_a]:w-10 [&_a]:h-10 [&_a]:grid [&_a]:place-items-center [&_a]:[border:1px_solid_#d6b87788] [&_a]:rounded-full [&_a]:text-[#edcf90] [&_a:hover]:bg-[#edbe6620] max-[900px]:[&_h3]:text-[23px] max-[900px]:[&_p]:text-[15px] max-[600px]:[&_h3]:text-[24px] max-[600px]:[&_h3]:pr-[13px] max-[600px]:[&_a]:row-[1] max-[600px]:[&_a]:col-[2] max-[600px]:[&_a]:w-8.5 max-[600px]:[&_a]:h-8.5 max-[600px]:[&_a]:mr-2",
@@ -36,20 +35,18 @@ const ui: Record<string, string> = {
 
 // The track and each badge share the same clock; reverse rotation keeps logos upright.
 const rotationClasses = "motion-safe:animate-spin motion-safe:[animation-duration:40s] group-data-[animated=false]/orbit:animate-none group-data-[paused=true]/orbit:[animation-play-state:paused] group-hover/orbit:[animation-play-state:paused] group-focus-within/orbit:[animation-play-state:paused] motion-reduce:animate-none";
-// Five equally spaced points on a 135px radius around (185, 185), with 96px badges.
+// Four equally spaced points on a 135px radius around (185, 185), with 96px badges.
 const orbitPositions = [
   "left-[137px] top-[2px]",
-  "left-[265.39px] top-[95.28px]",
-  "left-[216.35px] top-[246.22px]",
-  "left-[57.65px] top-[246.22px]",
-  "left-[8.61px] top-[95.28px]",
+  "left-[272px] top-[137px]",
+  "left-[137px] top-[272px]",
+  "left-[2px] top-[137px]",
 ];
 
 const programmes = [
   { name: "Goalkeepers", image: "goalkeepers.webp", position: "goalkeepers", label: "A thoughtful first step", description: "DGS’s own pre-admission programme helps families understand a child’s strengths and next steps, beyond a score.", link: "https://doonglobalschool.edu.in/programmes/" },
   { name: "Bengaluru FC", image: "bengaluru.webp", position: "bengaluru", label: "Find your footballing feet", description: "A connection with Bengaluru FC Soccer Schools brings a dedicated football programme into the conversation.", link: "https://bengalurufc.com/" },
   { name: "Prayaas", image: "prayaas.webp", position: "prayaas", label: "Clarity before the boards", description: "Independent CBSE mock-board assessments help senior students understand what to focus on next.", link: "https://prayaassessments.com/" },
-  { name: "Centurion", image: "centurion.webp", position: "centurion", label: "Purpose. Preparation. Possibility.", description: "Explore defence preparation opportunities through the school’s association with Centurion Defence Academy.", link: "https://centuriondefenceacademy.com/" },
   { name: "Kidnasium", image: "kidnasium.webp", position: "kidnasium", label: "The joy of moving", description: "Discover an approach to movement, fitness and physical confidence through the school’s Kidnasium association.", link: "https://kidnasium.in/" },
 ];
 
