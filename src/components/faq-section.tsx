@@ -27,7 +27,7 @@ const questions = [
   },
   {
     question: "How can we visit the campus or begin admissions?",
-    answer: "Admission takes six steps: enquiry and registration, submission of documents, an entrance assessment for Grade I and above (about an hour, covering English, Mathematics, Science or EVS, and reasoning), an interaction with the Principal, fee payment with an offer letter, and orientation before the year begins. Call +91 74559 97333 or email admissions@doonglobalschool.edu.in to plan a campus visit at 14th Milestone, Chakrata Road, Jhajra, Dehradun.",
+    answer: "Admission takes six steps: enquiry and registration, submission of documents, an entrance assessment for Grade I and above (about an hour, covering English, Mathematics, Science or EVS, and reasoning), an interaction with the Principal, fee payment with an offer letter, and orientation before the year begins. Call +91 74559 97333 or email admissions@doonglobalschool.edu.in to plan a campus visit at Chakrata Road, Jhajra, Dehradun.",
   },
 ];
 
