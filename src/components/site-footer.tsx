@@ -73,7 +73,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           <div className={ui.visit} data-reveal data-reveal-delay="2">
             <h3>VISIT OUR CAMPUS</h3>
             <span className={ui.locationLabel}><MapPin size={15} aria-hidden="true" /> Dehradun, Uttarakhand</span>
-            <address>Chakrata Road<br />Jhajra, Dehradun</address>
+            <address>Chakrata Road, Jhajra, Dehradun,<br />Uttarakhand - 248015, India</address>
             <button className={ui.textButton} onClick={onEnquire} aria-haspopup="dialog">Plan a campus visit <ArrowRight size={14} aria-hidden="true" /></button>
             <a className={ui.official} href="https://doonglobalschool.edu.in/" target="_blank" rel="noopener noreferrer">Official school website <ArrowUpRight size={12} aria-hidden="true" /></a>
           </div>
