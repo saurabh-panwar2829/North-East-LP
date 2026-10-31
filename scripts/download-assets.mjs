@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 
+// bfc-soccer-schools.webp and bfc-soccer-schools-stacked.webp come from the partner's own site (https://bfcsoccerschools.com/_nuxt/img/logo.4e75457.svg), not the school's.
 const assets = {
   'logo.webp': 'images/brand/dgs-logo-256.webp',
   'logo-white.webp': 'images/brand/dgs-logo-white-256.webp',
@@ -12,7 +13,6 @@ const assets = {
   'leadership.webp': 'images/investiture/Faith-House.webp',
   'campus-life.webp': 'images/campus/dgs-photo-dsc09401.webp',
   'goalkeepers.webp': 'images/associates/goalkeepers-logo.webp',
-  'bengaluru.webp': 'images/associates/bengaluru-fc-soccer-schools-logo.webp',
   'prayaas.webp': 'images/associates/prayaas-assessments-logo.webp',
   'centurion.webp': 'images/associates/centurion-defence-academy-logo.webp',
   'kidnasium.webp': 'images/associates/kidnasium-logo.webp',

@@ -22,7 +22,7 @@ const ui: Record<string, string> = {
   partners: "dgs-partners-section-partners pointer-events-none absolute inset-0 z-3 origin-center",
   badge: "dgs-partners-section-badge pointer-events-auto flex size-full flex-col items-center justify-center gap-1 rounded-full border-2 border-[#fffefb] bg-[#fffefb] px-2 pt-3 pb-2 shadow-[0_4px_20px_#001b2230] transition-[box-shadow,border-color] duration-200 hover:border-gold hover:shadow-[0_0_0_5px_#edbe6622,0_10px_30px_#001a2866] aria-selected:border-gold aria-selected:shadow-[0_0_0_5px_#edbe6622,0_10px_30px_#001a2866] focus-visible:outline-3 focus-visible:outline-[#f5d98d] focus-visible:outline-offset-[5px] [&_img]:h-12.5 [&_img]:w-18.5 [&_img]:object-contain [&_span]:text-[9.5px] [&_span]:font-[650] [&_span]:leading-[1.3] [&_span]:tracking-[0] [&_span]:whitespace-nowrap [&_span]:text-[#3a473b] motion-reduce:transition-none",
   goalkeepers: "[&_img]:h-10 [&_img]:w-[79px]",
-  bengaluru: "[&_img]:h-[51px] [&_img]:w-14",
+  bengaluru: "[&_img]:h-[58px]! [&_img]:w-16! [&_span]:hidden",
   prayaas: "[&_img]:h-10 [&_img]:w-[79px] [&_span]:hidden",
   kidnasium: "[&_img]:h-[51px] [&_img]:w-14",
   note: "dgs-partners-section-note self-start justify-self-start mt-7 mr-0 mb-0 ml-4.5 font-serif italic text-[28px] leading-[1.25] tracking-[-.3px] [transform:rotate(-10deg)] [text-shadow:0_2px_15px_#001b16cc] max-[1150px]:text-[23px] max-[1150px]:mt-5.5 max-[1150px]:mr-0 max-[1150px]:mb-0 max-[1150px]:ml-2.5 max-[900px]:hidden",
@@ -45,7 +45,7 @@ const orbitPositions = [
 
 const programmes = [
   { name: "Goalkeepers", image: "goalkeepers.webp", position: "goalkeepers", label: "A thoughtful first step", description: "DGS’s own pre-admission programme helps families understand a child’s strengths and next steps, beyond a score.", link: "https://doonglobalschool.edu.in/programmes/" },
-  { name: "Bengaluru FC", image: "bengaluru.webp", position: "bengaluru", label: "Find your footballing feet", description: "A connection with Bengaluru FC Soccer Schools brings a dedicated football programme into the conversation.", link: "https://bengalurufc.com/" },
+  { name: "BFC Soccer Schools", image: "bfc-soccer-schools-stacked.webp", position: "bengaluru", label: "Find your footballing feet", description: "A connection with Bengaluru FC Soccer Schools brings a dedicated football programme into the conversation.", link: "https://bfcsoccerschools.com/" },
   { name: "Prayaas", image: "prayaas.webp", position: "prayaas", label: "Clarity before the boards", description: "Independent CBSE mock-board assessments help senior students understand what to focus on next.", link: "https://prayaassessments.com/" },
   { name: "Kidnasium", image: "kidnasium.webp", position: "kidnasium", label: "The joy of moving", description: "Discover an approach to movement, fitness and physical confidence through the school’s Kidnasium association.", link: "https://kidnasium.in/" },
 ];
@@ -124,7 +124,7 @@ export default function PartnersSection() {
                   }}
                 >
                   <Image src={`/images/${programme.image}`} alt="" width={90} height={65} />
-                  <span>{programme.name === "Bengaluru FC" ? "BENGALURU FC" : programme.name.toUpperCase()}</span>
+                  <span>{programme.name.toUpperCase()}</span>
                 </button>
                   </div>
                 </div>
