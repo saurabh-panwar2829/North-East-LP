@@ -1,6 +1,12 @@
+"use client";
+
+import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+
 import Image from "next/image";
 import { ArrowRight, ArrowUp, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
-import { ADMISSION_CITY_LABEL } from "@/lib/enquiry";
+import Link from "next/link";
+import { useCampaign } from "@/components/campaign-context";
+import { campaignCityLabel } from "@/lib/campaigns";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -30,7 +36,7 @@ const ui: Record<string, string> = {
 
 
 const links = [
-  { label: "North East admission drive", href: "#admission-drive" },
+  { label: "Admission drive", href: "#admission-drive" },
   { label: "Why Doon Global", href: "#why-dgs" },
   { label: "Life at DGS", href: "#life-at-dgs" },
   { label: "Boarding & belonging", href: "#boarding" },
@@ -39,6 +45,9 @@ const links = [
 ];
 
 export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => void; onPrivacy: () => void }) {
+  const campaign = useCampaign();
+  const isUttarakhand = campaign.id === "uttarakhand";
+  const cityLabel = campaignCityLabel(campaign);
   return (
     <footer className={ui.footer} id="contact">
       <div className={ui.horizon} aria-hidden="true" />
@@ -47,7 +56,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           <div data-reveal>
             <p className={ui.eyebrow}><span aria-hidden="true" /> ADMISSIONS OPEN 2027–28</p>
             <h2>Their next chapter. <em>Let’s begin.</em></h2>
-            <p className={ui.invitationText}>Welcoming families from {ADMISSION_CITY_LABEL}.</p>
+            <p lang={isUttarakhand ? "gbm" : undefined} className={ui.invitationText}>{isUttarakhand ? uk.footer : `Welcoming families from ${cityLabel}.`}</p>
           </div>
           <div className={ui.admissions} data-reveal data-reveal-delay="1">
             <button className={ui.callback} onClick={onEnquire} aria-haspopup="dialog">Request an admissions callback <ArrowUpRight size={19} aria-hidden="true" /></button>
@@ -79,6 +88,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           </div>
         </div>
 
+        <nav aria-label="Regional admission pages" className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/15 py-5 text-[14px]"><span className="text-[#b8caba]">Admission drives</span><Link href="/north-east" aria-current={campaign.id === "north-east" ? "page" : undefined} className="py-2 text-[#e8d3a3] underline-offset-4 hover:underline aria-[current=page]:underline">North East</Link><Link href="/uttarakhand" aria-current={campaign.id === "uttarakhand" ? "page" : undefined} className="py-2 text-[#e8d3a3] underline-offset-4 hover:underline aria-[current=page]:underline">Uttarakhand · Garhwal & Kumaun</Link></nav>
         <div className={ui.bottom}>
           <p>© {new Date().getFullYear()} Doon Global School. All rights reserved.</p>
           <div><button onClick={onPrivacy}>Privacy details</button><a className={ui.backToTop} href="#home">Back to top <span><ArrowUp size={15} aria-hidden="true" /></span></a></div>

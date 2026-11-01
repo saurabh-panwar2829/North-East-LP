@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { ADMISSION_CITY_LABEL } from "@/lib/enquiry";
 import "./globals.css";
 
 const sans = localFont({
@@ -43,10 +42,10 @@ const baseClasses = [
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  title: "A Brighter Future Begins at DGS | Doon Global School",
-  description: `Discover Doon Global School, Dehradun. CBSE boys’ boarding for Classes 3–12, for families in ${ADMISSION_CITY_LABEL}. Enquire for 2027–28.`,
+  title: "Admissions 2027–28 | Doon Global School",
+  description: "Explore regional admission drives and CBSE boys’ boarding at Doon Global School, Dehradun.",
   openGraph: {
-    title: "From Siliguri to a bigger tomorrow | Doon Global School",
+    title: "Admissions 2027–28 | Doon Global School",
     description: "A place to learn, belong and become. Explore boarding admissions for 2027–28.",
     type: "website",
     locale: "en_IN",

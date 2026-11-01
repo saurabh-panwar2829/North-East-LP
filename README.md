@@ -1,6 +1,27 @@
-# Doon Global School — North East admissions
+# Doon Global School — regional admissions
 
-A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 landing page for families in Siliguri, North Bengal, Sikkim and North East India. The design follows the supplied campaign references: forest green, ivory, gold, editorial typography and a cinematic hero.
+A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 site with separate North East and Uttarakhand admission campaigns. Both use the established forest-green, ivory and gold design, local fonts, school imagery and animations.
+
+## Campaign routes
+
+Run one server with `npm.cmd run dev`, then open:
+
+- North East: http://localhost:3000/north-east
+- Uttarakhand (Garhwal & Kumaun): http://localhost:3000/uttarakhand
+
+The app's `/` URL temporarily redirects to `/north-east`, preserving query parameters such as UTM tags. Footer links switch between the campaigns. Both routes have their own page title, description, canonical and Open Graph URL. Set `NEXT_PUBLIC_SITE_URL` to the deployed origin before building.
+
+`src/lib/campaigns.ts` is the single campaign configuration. North East retains Guwahati, Aizawl, Itanagar, Jorhat, Dimapur, Siliguri and Kolkata. Uttarakhand has Garhwal/Kumaun filters, with Srinagar, Pauri, Kotdwar and New Tehri under Garhwal; Haldwani, Almora, Rudrapur and Pithoragarh under Kumaun. These 8 towns were approved as interest-registration options, with dates/venues still unconfirmed. Edit each stop's `date` and `venue` in this file when confirmed. Other Uttarakhand towns/villages can request a callback through the form.
+
+Both pages share `src/components/campaign-page.tsx` and the design components. A keyed `CampaignProvider` supplies region-specific copy and options and resets form state when switching routes. Images and fonts remain shared under `public/`; there is no second standalone project or separate port.
+
+Uttarakhand combines English, Hindi and Garhwali. All six FAQ questions and answers use Hindi. The six school-life photo cards have English labels and headings, with Hindi descriptions and image alternatives. The hero and family passages include Garhwali, while navigation and other headings retain English. The regional passages live in `src/lib/uttarakhand-copy.ts`, with `lang="hi"` / `lang="gbm"` at their render sites. `src/app/uttarakhand/layout.tsx` loads the locally hosted Noto Sans Devanagari font (SIL Open Font License in `public/fonts/`) only for that route. North East keeps its existing English copy.
+
+The form sends a `campaign` ID to `/api/enquiry`. Server validation rejects towns and drive choices belonging to the other campaign. Prepared email/WhatsApp messages identify the campaign. Optional webhook payloads include `campaign` and a derived `source`: `north-east-landing-page` or `uttarakhand-garhwal-kumaun-landing-page`. Old clients without a campaign ID continue to use North East validation. Unknown explicit IDs are rejected.
+
+Run `npm.cmd run test:routes` for both routes, metadata, query-preserving redirect, cross-campaign validation, client navigation, mobile layouts and enquiry flow. The existing `npm.cmd run test:browser` checks `/north-east`. Both accept `BASE_URL` (default `http://localhost:3000`). Route screenshots are in `artifacts/campaigns/`. Local test submissions must use a server with the CRM webhook unset.
+
+These are local source changes. To expose `/north-east` and `/uttarakhand` on the school's existing public domain, its hosting must serve these routes, `/api/enquiry`, shared assets and Next.js build assets from this application. The existing public school homepage is not included in this repository and has not been deployed or replaced by this task.
 
 ## Run locally
 
@@ -42,17 +63,19 @@ Before connecting a public campaign, use the receiving CRM’s deduplication, sp
 
 ## Project map
 
-- `src/app/page.tsx`: landing-page composition and admissions/privacy dialogs.
+- `src/app/north-east/page.tsx` and `src/app/uttarakhand/page.tsx`: route entry points and metadata; `src/app/page.tsx` supplies the root fallback.
+- `src/components/campaign-page.tsx`: shared page composition and admissions/privacy dialogs.
+- `src/lib/campaigns.ts`: campaign copy, cities, hometown groups, confirmed dates/venues and lead-source names.
 - `src/app/globals.css`: Tailwind import and theme tokens only; no custom selectors or component rules.
 - `postcss.config.mjs`: official Tailwind PostCSS integration.
 - `src/app/layout.tsx`: locally hosted fonts through `next/font/local`, Tailwind typography defaults and shared interaction utilities.
 - `src/components/admissions-form.tsx`: responsive two-column enquiry design, validation and delivery states.
 - `src/components/campus-hero.tsx`: bright campus hero, EducationWorld rankings, verified school facts and admissions entry point.
-- `src/components/admission-drive.tsx`: drive-city ticker; the North East admission drive section, whose background plays a scroll-scrubbed football shot before the content rises in; the drive schedule with per-city registration; and the four-step drive process. Drive dates and venues are edited in its `stops` list.
+- `src/components/admission-drive.tsx`: city ticker, scroll-driven football background, registration list and four-step process; Uttarakhand adds Garhwal/Kumaun filters. Dates and venues come from `src/lib/campaigns.ts`.
 - `src/components/rotating-word.tsx`: rotates North East home towns in the “From Siliguri.” heading, with a steady label for screen readers.
 - `src/components/site-header.tsx`: transparent overlay header, section navigation, mobile menu and admissions button; a compact light surface appears on scroll.
 - `src/components/school-life-section.tsx`: “A School Day” scattered photo collage whose cards fly in from the sides as the page scrolls.
-- `src/components/north-east-benefits.tsx`: North East family benefits, boarding eligibility and an admissions entry point.
+- `src/components/boarding-benefits.tsx`: regional family messaging, boarding eligibility and an admissions entry point.
 - `src/components/site-footer.tsx`: forest-green admissions footer, contact details, section links and privacy entry point.
 - `src/components/faq-section.tsx`: numbered question cards, animated single-open accordion and admissions guidance panel, styled entirely with Tailwind.
 - `src/components/site-motion.tsx`: smooth scrolling, scroll reveals, line-by-line heading and letter-by-letter label entrances, hero photo shrink, image parallax and reveals, scroll-linked route and ticker effects, and reading progress.
@@ -68,11 +91,11 @@ All layout, responsive, hover, focus and form-state styling uses Tailwind utilit
 
 ## North East admission drive
 
-A forest-green ticker of the drive cities leads into the forest-green “Meet DGS admissions, closer to home.” section directly below the hero (`#admission-drive`). On desktop it is a two-column layout. The left column holds the introduction, a register button and the phone number, with the four-step “How the drive works” timeline beneath them. The right column is a “Drive cities” schedule panel: one slim, fully clickable row for each of six cities (Siliguri, Guwahati, Gangtok, Shillong, Imphal and Dimapur) and an “Elsewhere in the North East?” strip for other states. On phones the schedule comes before the steps. The steps follow the admissions process already described in the FAQs. The header, footer and hero badge link to it.
+A forest-green city ticker leads into “Meet DGS admissions, closer to home.” below the hero (`#admission-drive`). On desktop the introduction and four-step process sit beside a registration panel with Guwahati, Aizawl, Itanagar, Jorhat, Dimapur, Siliguri and Kolkata. On phones the registration panel comes before the steps. The header, footer and hero badge link to this section.
 
-Each city’s **Register** button opens the enquiry form with that city selected in the “North East admission drive” field and its state selected under City / state. Anything the parent has already typed is kept. With a city selected, the submit button reads “Register for <city>”, and the email draft and webhook name the drive city. The field is optional: “Not now — just a callback” sends an ordinary enquiry.
+Each city’s **Register** button preselects that city in the drive and hometown fields, retaining already typed parent details. The submit button reads “Register for <city>”, and prepared messages or webhook payloads identify the town. “Not now — just a callback” prepares an ordinary enquiry.
 
-**Before launch:** no drive dates or venues are published. Each card shows “Date to be announced” until you fill in `date` and `venue` for that city in `stops` in `src/components/admission-drive.tsx`. To add or remove a city, update `DRIVE_CITIES` in `src/lib/enquiry.ts` and `stops` together; TypeScript flags any mismatch. Confirm the cities and the “the team gets in touch to confirm the venue” step with the admissions team. Previews: `artifacts/admission-drive-desktop.png` and `artifacts/admission-drive-mobile.png`.
+**Before launch:** dates and venues remain unconfirmed. Each row shows “Date to be announced” until its `date` and `venue` are populated in `src/lib/campaigns.ts`. Confirm the current schedule with admissions. Previews for both routes are under `artifacts/campaigns/`.
 
 ## Readability
 

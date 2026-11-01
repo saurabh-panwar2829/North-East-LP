@@ -1,4 +1,9 @@
+"use client";
+
+import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+
 import Image from "next/image";
+import { useCampaign } from "@/components/campaign-context";
 import { ArrowRight, ArrowUpRight, BookOpen, GraduationCap, MapPin, ShieldCheck } from "lucide-react";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
@@ -55,6 +60,8 @@ function Laurel({ right = false }: { right?: boolean }) {
 }
 
 export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
+  const campaign = useCampaign();
+  const isUttarakhand = campaign.id === "uttarakhand";
   return <section className={ui.hero} aria-labelledby="hero-heading">
     <div className={ui.scene}>
       <Image className={ui.image} src="/images/hero-campus-dgs.jpeg" alt="Doon Global School campus building, with students on the drive and the Dehradun foothills behind" fill sizes="(max-width: 700px) 1000px, 100vw" quality={85} preload />
@@ -62,9 +69,15 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
 
       <div className={`dgs-container w-[calc(100%_-_128px)] max-w-[1280px] ml-auto mr-auto max-[1150px]:w-[calc(100%_-_80px)] max-[900px]:w-[calc(100%_-_56px)] max-[760px]:w-[calc(100%_-_40px)] max-[370px]:w-[calc(100%_-_32px)] ${ui.inner}`}>
         <div className={ui.copy}>
-          <p className={ui.eyebrow}><span /> NORTH EAST INDIA</p>
-          <h1 id="hero-heading"><span className={ui.titleLine}><span className={ui.titleText}>Excellence. Growth.</span></span><span className={ui.titleLine}><em className={ui.titleText}>A brighter future.</em></span></h1>
-          <p className={ui.description}>A new chapter in Dehradun. A world of possibilities.<br className={ui.desktopBreak} /> Discover a CBSE boarding school where your child<br className={ui.desktopBreak} /> finds the space to learn, belong and become.</p>
+          <p className={ui.eyebrow}><span /> {campaign.eyebrow}</p>
+          <h1 id="hero-heading">
+            <span className={ui.titleLine}>
+              <span lang={isUttarakhand ? "gbm" : undefined} className={`${ui.titleText}${isUttarakhand ? " text-[.78em] font-medium leading-[1.35]!" : ""}`}>{campaign.heroLines[0]}</span>
+            </span>
+            <span className={ui.titleLine}><em className={ui.titleText}>{campaign.heroLines[1]}</em></span>
+          </h1>
+          {isUttarakhand && <p lang="gbm" className="mt-4 text-[17px] font-medium text-[#526748] max-[700px]:text-[16px]">{uk.heroTagline}</p>}
+          <p lang={campaign.id === "uttarakhand" ? "hi" : undefined} className={ui.description}>{campaign.id === "uttarakhand" ? uk.hero : <>A new chapter in Dehradun. A world of possibilities.<br className={ui.desktopBreak} /> Discover a CBSE boarding school where your child<br className={ui.desktopBreak} /> finds the space to learn, belong and become.</>}</p>
 
           <div className={ui.recognition} aria-label="EducationWorld School Rankings 2026–27: number 3 in Dehradun and number 4 in Uttarakhand">
             <p className={ui.awardEyebrow}><span aria-hidden="true">⟶</span> A PROUD MOMENT FOR DGS</p>
@@ -85,7 +98,7 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
           <p className={ui.familyNote}><ShieldCheck size={14} /> Boys’ boarding · Classes 3–12</p>
         </div>
 
-        <a href="#admission-drive" className={ui.admissionsBadge}><span /> NORTH EAST ADMISSION DRIVE <strong>2027–28</strong> <ArrowRight size={14} aria-hidden="true" /></a>
+        <a href="#admission-drive" className={ui.admissionsBadge}><span /> {campaign.name.toUpperCase()} ADMISSION DRIVE <strong>2027–28</strong> <ArrowRight size={14} aria-hidden="true" /></a>
         <div className={ui.campusCaption}><span className={ui.locationIcon}><MapPin size={21} /></span><div><span>DEHRADUN, UTTARAKHAND</span><p>A beautiful place to begin.</p></div><span className={ui.captionStar} aria-hidden="true"><i /></span></div>
       </div>
     </div>

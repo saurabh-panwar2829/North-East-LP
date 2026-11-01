@@ -1,6 +1,9 @@
 "use client";
 
+import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+
 import Image from "next/image";
+import { useCampaign } from "@/components/campaign-context";
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 
@@ -76,7 +79,7 @@ const activities = [
     heading: "New friendships. A sense of belonging.",
     description: "A residential experience for boys in Classes 3–12, with time for study, shared routines, friendship and the everyday discoveries of growing up.",
   },
-];
+] as const;
 
 // Resting tilt, photo shape and the scattered point each card flies in from (x and y as fractions of the viewport).
 const layout = [
@@ -92,6 +95,8 @@ const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const easeOut = (value: number) => 1 - (1 - value) ** 2;
 
 export default function SchoolLifeSection() {
+  const isUttarakhand = useCampaign().id === "uttarakhand";
+  const campaignActivities = isUttarakhand ? activities.map(activity => ({ ...activity, ...uk.photoCards[activity.id] })) : activities;
   const collageRef = useRef<HTMLDivElement>(null);
 
   // Each card's own position drives it: it scatters in from off to the side, settles into the collage, then drifts gently.
@@ -145,21 +150,21 @@ export default function SchoolLifeSection() {
             <h2 id="school-life-heading">A School Day<br />with Room for <em>More.</em></h2>
           </div>
           <div className={ui.aside}>
-            <p className={ui.description}>At DGS, academics and a vibrant environment come together to help students grow with confidence.</p>
+            <p lang={isUttarakhand ? "hi" : undefined} className={ui.description}>{isUttarakhand ? uk.schoolLife : "At DGS, academics and a vibrant environment come together to help students grow with confidence."}</p>
             <a className={ui.explore} href="#programmes">Explore Life at DGS <ArrowRight size={17} aria-hidden="true" /></a>
           </div>
         </div>
 
         <div className={ui.collage} ref={collageRef}>
-          {activities.map((activity, index) => (
+          {campaignActivities.map((activity, index) => (
             <article className={ui.card} key={activity.id} style={{ "--rest-r": `${layout[index].rest}deg` } as React.CSSProperties}>
               <span className={ui.photo} style={{ aspectRatio: layout[index].aspect }}>
-                <Image src={activity.src} alt={activity.alt} fill sizes="(max-width: 600px) 82vw, (max-width: 900px) 44vw, 400px" style={{ objectPosition: activity.position }} />
+                <Image src={activity.src} alt={activity.alt} lang={isUttarakhand ? "hi" : undefined} fill sizes="(max-width: 600px) 82vw, (max-width: 900px) 44vw, 400px" style={{ objectPosition: activity.position }} />
               </span>
               <div className={ui.text}>
                 <p className={ui.label}>{String(index + 1).padStart(2, "0")} — {activity.title}</p>
                 <h3>{activity.heading}</h3>
-                <p>{activity.description}</p>
+                <p lang={isUttarakhand ? "hi" : undefined}>{activity.description}</p>
               </div>
             </article>
           ))}

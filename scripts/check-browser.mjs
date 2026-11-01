@@ -2,8 +2,11 @@ import { chromium } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 
+const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+page.setDefaultTimeout(15000);
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 async function revealWholePage() {
@@ -23,7 +26,7 @@ async function revealWholePage() {
   });
 }
 try {
-  const response = await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+  const response = await page.goto(`${baseUrl}/north-east`, { waitUntil: 'networkidle' });
   assert.equal(response.status(), 200);
   await page.getByRole('heading', { name: /Excellence. Growth. A brighter future./ }).waitFor();
   assert.ok(await page.locator('[data-reveal-state="pending"]').count() > 0, 'Off-screen reveals are initialized');
@@ -164,12 +167,12 @@ try {
   assert.ok(collageTravel.scattered > 100 && collageTravel.settled < 2, `Collage cards fly in and settle (${JSON.stringify(collageTravel)})`);
   await page.getByRole('heading', { name: 'New friendships. A sense of belonging.' }).waitFor();
   await page.getByRole('link', { name: 'Explore Life at DGS', exact: true }).click();
-  await page.waitForURL('**/#programmes');
+  await page.waitForURL('**/north-east#programmes');
 
   await page.locator('.group\\/orbit').hover({ position: { x: 5, y: 5 } });
-  await page.getByRole('tab', { name: 'Bengaluru FC' }).click();
+  await page.getByRole('tab', { name: 'BFC Soccer Schools' }).click();
   await page.getByRole('heading', { name: 'Find your footballing feet' }).waitFor();
-  await page.getByRole('tab', { name: 'Bengaluru FC' }).press('ArrowRight');
+  await page.getByRole('tab', { name: 'BFC Soccer Schools' }).press('ArrowRight');
   await page.getByRole('heading', { name: 'Clarity before the boards' }).waitFor();
   await page.mouse.move(0, 0);
   assert.equal(await page.locator('.dgs-partners-section-partners').evaluate(element => element.getAnimations().every(animation => animation.playState === 'paused')), true, 'Keyboard focus pauses the orbit');
@@ -259,7 +262,7 @@ try {
   assert.equal(await page.getByRole('button', { name: 'Pause programme rotation', exact: true }).isVisible(), false);
   const staticPage = await browser.newPage({ javaScriptEnabled: false });
   try {
-    await staticPage.goto('http://localhost:3000', { waitUntil: 'networkidle' });
+    await staticPage.goto(`${baseUrl}/north-east`, { waitUntil: 'networkidle' });
     assert.equal(await staticPage.locator('[data-reveal]').evaluateAll(elements => elements.every(element => getComputedStyle(element).opacity === '1')), true);
     assert.equal(await staticPage.locator('.dgs-partners-section-partners').evaluate(element => getComputedStyle(element).animationName), 'none');
   } finally { await staticPage.close(); }
