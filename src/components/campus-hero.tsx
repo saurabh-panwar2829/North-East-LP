@@ -1,6 +1,6 @@
 "use client";
 
-import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+import { getRegionalCopy } from "@/lib/regional-copy";
 
 import Image from "next/image";
 import { useCampaign } from "@/components/campaign-context";
@@ -61,7 +61,7 @@ function Laurel({ right = false }: { right?: boolean }) {
 
 export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
   const campaign = useCampaign();
-  const isUttarakhand = campaign.id === "uttarakhand";
+  const copy = getRegionalCopy(campaign.id);
   return <section className={ui.hero} aria-labelledby="hero-heading">
     <div className={ui.scene}>
       <Image className={ui.image} src="/images/hero-campus-dgs.jpeg" alt="Doon Global School campus building, with students on the drive and the Dehradun foothills behind" fill sizes="(max-width: 700px) 1000px, 100vw" quality={85} preload />
@@ -72,12 +72,12 @@ export default function CampusHero({ onEnquire }: { onEnquire: () => void }) {
           <p className={ui.eyebrow}><span /> {campaign.eyebrow}</p>
           <h1 id="hero-heading">
             <span className={ui.titleLine}>
-              <span lang={isUttarakhand ? "gbm" : undefined} className={`${ui.titleText}${isUttarakhand ? " text-[.78em] font-medium leading-[1.35]!" : ""}`}>{campaign.heroLines[0]}</span>
+              <span lang={copy?.familyLanguage} className={`${ui.titleText}${copy ? " text-[.78em] font-medium leading-[1.35]!" : ""}`}>{campaign.heroLines[0]}</span>
             </span>
             <span className={ui.titleLine}><em className={ui.titleText}>{campaign.heroLines[1]}</em></span>
           </h1>
-          {isUttarakhand && <p lang="gbm" className="mt-4 text-[17px] font-medium text-[#526748] max-[700px]:text-[16px]">{uk.heroTagline}</p>}
-          <p lang={campaign.id === "uttarakhand" ? "hi" : undefined} className={ui.description}>{campaign.id === "uttarakhand" ? uk.hero : <>A new chapter in Dehradun. A world of possibilities.<br className={ui.desktopBreak} /> Discover a CBSE boarding school where your child<br className={ui.desktopBreak} /> finds the space to learn, belong and become.</>}</p>
+          {copy && <p lang={copy.familyLanguage} className="mt-4 text-[17px] font-medium text-[#526748] max-[700px]:text-[16px]">{copy.heroTagline}</p>}
+          <p lang={copy ? "hi" : undefined} className={ui.description}>{copy ? copy.hero : <>A new chapter in Dehradun. A world of possibilities.<br className={ui.desktopBreak} /> Discover a CBSE boarding school where your child<br className={ui.desktopBreak} /> finds the space to learn, belong and become.</>}</p>
 
           <div className={ui.recognition} aria-label="EducationWorld School Rankings 2026–27: number 3 in Dehradun and number 4 in Uttarakhand">
             <p className={ui.awardEyebrow}><span aria-hidden="true">⟶</span> A PROUD MOMENT FOR DGS</p>

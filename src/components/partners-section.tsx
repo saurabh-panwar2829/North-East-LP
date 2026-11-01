@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Pause, Play, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -15,7 +15,7 @@ const ui: Record<string, string> = {
   eyebrow: "dgs-partners-section-eyebrow flex items-center gap-[9px] mb-4.5 text-[13px] leading-[1.6] font-semibold tracking-[1.55px] text-[#f4f1df] [&_>_span]:text-[23px] [&_>_span]:leading-[1] [&_>_span]:text-[#edbe66] max-[1150px]:text-[11px] max-[1150px]:tracking-[1.1px] max-[900px]:max-w-[250px] max-[900px]:text-[11px] max-[600px]:mb-[17px] max-[600px]:text-[11px] max-[600px]:max-w-none max-[370px]:text-[11px] max-[370px]:tracking-[.9px]",
   description: "dgs-partners-section-description mt-5 text-[17px] leading-[1.75] text-[#f0f1e6] max-[1150px]:text-[15px] max-[1150px]:max-w-[285px] max-[600px]:text-[15px] max-[600px]:max-w-[250px] max-[600px]:mt-[17px]",
   hint: "dgs-partners-section-hint mt-[25px] flex items-center gap-2.5 text-[13px] tracking-[.6px] text-[#e4c789] [&_svg]:opacity-85 max-[600px]:text-[12px] max-[600px]:mt-[17px]",
-  network: "dgs-partners-section-network relative h-[414px] w-[370px] justify-self-center max-[1150px]:[zoom:.86] max-[900px]:[zoom:.76] max-[600px]:mx-auto max-[600px]:mt-[15px] max-[600px]:[zoom:.85] max-[370px]:[zoom:.79]",
+  network: "dgs-partners-section-network relative size-[370px] justify-self-center max-[1150px]:[zoom:.86] max-[900px]:[zoom:.76] max-[600px]:mx-auto max-[600px]:mt-[15px] max-[600px]:[zoom:.85] max-[370px]:[zoom:.79]",
   stage: "group/orbit relative size-[370px]",
   orbit: "pointer-events-none absolute left-[50px] top-[50px] size-[270px] rounded-full border border-[#d5b04f99] shadow-[0_0_24px_#d9b6550a]",
   schoolBadge: "dgs-partners-section-schoolBadge absolute left-1/2 top-1/2 z-2 grid size-28 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[#c7b36e] bg-[radial-gradient(circle_at_35%_25%,#164c34,#053c2c_65%)] shadow-[0_0_28px_#c4b34726,inset_0_0_22px_#0b2c2399] [&_img]:h-[72px] [&_img]:w-[92px] [&_img]:object-contain",
@@ -52,7 +52,6 @@ const programmes = [
 
 export default function PartnersSection() {
   const [active, setActive] = useState<number | null>(null);
-  const [rotationPaused, setRotationPaused] = useState(false);
   const [animationReady, setAnimationReady] = useState(false);
   const [inView, setInView] = useState(false);
   const networkRef = useRef<HTMLDivElement>(null);
@@ -95,7 +94,7 @@ export default function PartnersSection() {
           </div>
 
           <div ref={networkRef} className={ui.network} data-reveal data-reveal-delay="1">
-            <div className={ui.stage} data-animated={animationReady} data-paused={rotationPaused || !inView}>
+            <div className={ui.stage} data-animated={animationReady} data-paused={!inView}>
               <div className={ui.orbit} aria-hidden="true" />
               <div className={ui.schoolBadge}>
                 <Image src="/images/logo-white.webp" alt="Doon Global School" width={106} height={78} />
@@ -131,17 +130,6 @@ export default function PartnersSection() {
               ))}
             </div>
             </div>
-            {animationReady && <div className="mt-3 flex justify-center motion-reduce:hidden">
-              <button
-                type="button"
-                onClick={() => setRotationPaused(paused => !paused)}
-                aria-label={rotationPaused ? "Resume programme rotation" : "Pause programme rotation"}
-                className="inline-flex min-h-8 items-center gap-2 rounded-full border border-[#d6be7d40] bg-[#042d2480] px-3 py-1.5 text-[13px] text-[#e2d3aa] transition-colors hover:border-[#d6be7d99] hover:bg-[#164734]"
-              >
-                {rotationPaused ? <Play size={11} aria-hidden="true" /> : <Pause size={11} aria-hidden="true" />}
-                {rotationPaused ? "Resume rotation" : "Pause rotation"}
-              </button>
-            </div>}
           </div>
 
           <p className={ui.note}>A stronger<br />tomorrow for<br />every young boy.</p>

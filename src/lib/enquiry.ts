@@ -1,4 +1,4 @@
-import { getCampaign, OTHER_TOWN, type CampaignId } from "./campaigns.ts";
+import { getCampaign, type CampaignId } from "./campaigns.ts";
 
 export const CLASS_OPTIONS = Array.from({ length: 10 }, (_, index) => String(index + 3));
 export const INTERESTS = ["Boarding admissions", "Activities & programmes", "Both"];
@@ -14,14 +14,15 @@ export function validateEnquiry(input: unknown): { data?: Enquiry; errors: Recor
   const campaign = getCampaign(value.campaign === undefined ? "north-east" : read("campaign"));
   if (!campaign) errors.campaign = "Please choose a valid admissions campaign.";
   const towns = campaign?.homeGroups.flatMap(group => [...group.towns]) ?? [];
-  if (campaign?.id === "uttarakhand") towns.push(OTHER_TOWN);
+  if (campaign?.otherTown) towns.push(campaign.otherTown);
+  const isOtherTown = Boolean(campaign?.otherTown && read("region") === campaign.otherTown);
   const phone = read("phone").replace(/[\s()-]/g, "").replace(/^(?:\+91|91)(?=\d{10}$)/, "");
-  const data: Enquiry = { campaign: campaign?.id, name: read("name"), phone, grade: read("grade"), region: read("region"), city: read("region") === OTHER_TOWN ? read("city") : "", interest: read("interest"), drive: read("drive"), consent: value.consent === true, website: read("website") };
+  const data: Enquiry = { campaign: campaign?.id, name: read("name"), phone, grade: read("grade"), region: read("region"), city: isOtherTown ? read("city") : "", interest: read("interest"), drive: read("drive"), consent: value.consent === true, website: read("website") };
   if (data.name.length < 2 || data.name.length > 80 || /[\r\n]/.test(data.name)) errors.name = "Enter a parent or guardian’s name (2–80 characters).";
   if (!/^[6-9]\d{9}$/.test(phone)) errors.phone = "Enter a valid 10-digit Indian mobile number.";
   if (!CLASS_OPTIONS.includes(data.grade)) errors.grade = "Please select a class.";
   if (!towns.includes(data.region)) errors.region = "Please select your city.";
-  if (data.region === OTHER_TOWN && (data.city.length < 2 || data.city.length > 80 || /[\r\n]/.test(data.city))) errors.city = "Enter your town or village (2–80 characters).";
+  if (isOtherTown && (data.city.length < 2 || data.city.length > 80 || /[\r\n]/.test(data.city))) errors.city = "Enter your town or village (2–80 characters).";
   if (!INTERESTS.includes(data.interest)) errors.interest = "Please choose what you’re interested in.";
   if (data.drive && !campaign?.driveStops.some(stop => stop.city === data.drive)) errors.drive = "Please choose an admission drive city.";
   if (!data.consent) errors.consent = "Please agree to be contacted about your enquiry.";
@@ -36,7 +37,7 @@ export const ADMISSIONS_WHATSAPP_LABEL = "+91 86507 28951";
 function enquiryMessage(data: Enquiry) {
   const campaign = getCampaign(data.campaign ?? "north-east");
   if (!campaign) throw new Error("Unknown campaign");
-  const place = data.region === OTHER_TOWN ? `${data.city}, Uttarakhand` : data.region;
+  const place = data.region === campaign.otherTown ? `${data.city}, ${campaign.name}` : data.region;
   const area = campaign.id === "uttarakhand" ? campaign.homeGroups.find(group => group.towns.includes(data.region))?.label : undefined;
   const subject = `2027–28 ${campaign.name} ${data.drive ? `admission drive · ${data.drive}` : "boarding enquiry"} · Class ${data.grade} · ${place}`;
   const request = data.drive ? `I would like to register my interest in the ${campaign.name} admission drive in ${data.drive} for the 2027–28 session. Please confirm the date and venue when available.` : "I would like to request a callback about the 2027–28 session.";

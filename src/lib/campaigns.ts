@@ -1,9 +1,11 @@
-export type CampaignId = "north-east" | "uttarakhand";
+export type CampaignId = "north-east" | "uttarakhand" | "uttar-pradesh";
 export const NORTH_EAST_CITIES = ["Guwahati", "Aizawl", "Itanagar", "Jorhat", "Dimapur", "Siliguri", "Kolkata"] as const;
 export const GARHWAL_CITIES = ["Srinagar", "Pauri", "Kotdwar", "New Tehri"] as const;
 export const KUMAUN_CITIES = ["Haldwani", "Almora", "Rudrapur", "Pithoragarh"] as const;
-export type DriveCity = (typeof NORTH_EAST_CITIES)[number] | (typeof GARHWAL_CITIES)[number] | (typeof KUMAUN_CITIES)[number];
+export const UTTAR_PRADESH_CITIES = ["Meerut", "Muzaffarnagar", "Saharanpur", "Ghaziabad", "Noida", "Lucknow", "Kanpur", "Bareilly"] as const;
+export type DriveCity = (typeof NORTH_EAST_CITIES)[number] | (typeof GARHWAL_CITIES)[number] | (typeof KUMAUN_CITIES)[number] | (typeof UTTAR_PRADESH_CITIES)[number];
 export const OTHER_TOWN = "Other town in Uttarakhand";
+export const OTHER_UP_TOWN = "Other town in Uttar Pradesh";
 
 export type DriveStop = { city: DriveCity; area: string; date: string; venue: string };
 export type Campaign = {
@@ -16,6 +18,8 @@ export type Campaign = {
   description: string;
   source: string;
   defaultTown: string;
+  otherTown?: string;
+  driveRegions?: readonly string[];
   homeGroups: { label: string; towns: readonly string[] }[];
   driveStops: DriveStop[];
 };
@@ -45,6 +49,8 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     description: "A new chapter in Dehradun for families across Garhwal and Kumaun. Explore Doon Global School’s CBSE boys’ boarding, Classes 3–12, and enquire for 2027–28.",
     source: "uttarakhand-garhwal-kumaun-landing-page",
     defaultTown: "",
+    otherTown: OTHER_TOWN,
+    driveRegions: ["Garhwal", "Kumaun"],
     homeGroups: [
       { label: "Garhwal", towns: [...GARHWAL_CITIES, "Dehradun", "Haridwar", "Rishikesh", "Chamoli", "Rudraprayag", "Uttarkashi"] },
       { label: "Kumaun", towns: [...KUMAUN_CITIES, "Nainital", "Bageshwar", "Champawat", "Kashipur", "Ranikhet"] },
@@ -54,10 +60,28 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
       ...KUMAUN_CITIES.map(city => ({ city, area: "Kumaun", date: "", venue: "" })),
     ],
   },
+  "uttar-pradesh": {
+    id: "uttar-pradesh",
+    name: "Uttar Pradesh",
+    eyebrow: "UTTAR PRADESH",
+    audience: "Uttar Pradesh",
+    heroLines: ["बड़े सपनों की नई शुरुआत।", "Ready for the world."],
+    title: "Uttar Pradesh Admissions 2027–28 | Doon Global School",
+    description: "For families across Uttar Pradesh: discover CBSE boys’ boarding for Classes 3–12 at Doon Global School, Dehradun. Register interest in the 2027–28 admission drive.",
+    source: "uttar-pradesh-landing-page",
+    defaultTown: "",
+    otherTown: OTHER_UP_TOWN,
+    driveRegions: ["West UP", "Central UP"],
+    homeGroups: [
+      { label: "Admission drive cities", towns: UTTAR_PRADESH_CITIES },
+      { label: "Other UP cities", towns: ["Agra", "Aligarh", "Ayodhya", "Gorakhpur", "Jhansi", "Mathura", "Moradabad", "Prayagraj", "Varanasi"] },
+    ],
+    driveStops: UTTAR_PRADESH_CITIES.map(city => ({ city, area: city === "Lucknow" || city === "Kanpur" ? "Central UP" : "West UP", date: "", venue: "" })),
+  },
 };
 
 export function getCampaign(id: unknown): Campaign | undefined {
-  return id === "north-east" || id === "uttarakhand" ? CAMPAIGNS[id] : undefined;
+  return id === "north-east" || id === "uttarakhand" || id === "uttar-pradesh" ? CAMPAIGNS[id] : undefined;
 }
 
 export function campaignCityLabel(campaign: Campaign) {

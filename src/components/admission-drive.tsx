@@ -1,6 +1,6 @@
 "use client";
 
-import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+import { getRegionalCopy } from "@/lib/regional-copy";
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -79,9 +79,11 @@ function loadOrder() {
 
 export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: (preset: EnquiryPreset) => void; onEnquire: () => void }) {
   const campaign = useCampaign();
-  const isUttarakhand = campaign.id === "uttarakhand";
+  const copy = getRegionalCopy(campaign.id);
   const stops = campaign.driveStops;
-  const [activeArea, setActiveArea] = useState("Garhwal");
+  const regions = campaign.driveRegions ?? [];
+  const hasRegions = regions.length > 0;
+  const [activeArea, setActiveArea] = useState(regions[0] ?? "");
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tickerItems = [{ text: `${campaign.name.toUpperCase()} ADMISSION DRIVE · 2027–28`, label: true }, ...stops.map(({ city }) => ({ text: city, label: false })), { text: "REGISTRATIONS OPEN", label: true }];
@@ -194,8 +196,8 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
           <div className={ui.intro}>
             <p className={`${ui.eyebrow} ${enter}`}><span aria-hidden="true" /> {campaign.name.toUpperCase()} ADMISSION DRIVE · 2027–28</p>
             <h2 id="admission-drive-heading"><span className={ui.line}><span>Meet DGS admissions,</span></span><br /><span className={ui.line}><em style={{ transitionDelay: "110ms" }}>closer to home.</em></span></h2>
-            <p lang={isUttarakhand ? "hi" : undefined} className={enter} style={{ transitionDelay: "160ms" }}>{isUttarakhand ? uk.driveIntro : `The admissions team is meeting families in ${campaignCityLabel(campaign)}. Register for your city and we’ll share the venue, date and time once confirmed.`}</p>
-            {isUttarakhand && <p lang="hi" className={`${enter} text-[14px]! text-[#d9c896]!`}>{uk.driveNote}</p>}
+            <p lang={copy ? "hi" : undefined} className={enter} style={{ transitionDelay: "160ms" }}>{copy ? copy.driveIntro : `The admissions team is meeting families in ${campaignCityLabel(campaign)}. Register for your city and we’ll share the venue, date and time once confirmed.`}</p>
+            {copy && <p lang="hi" className={`${enter} text-[14px]! text-[#d9c896]!`}>{copy.driveNote}</p>}
             <div className={`${ui.actions} ${enter}`} style={{ transitionDelay: "240ms" }}>
               <button className={ui.register} onClick={onEnquire} aria-haspopup="dialog">Register your interest <ArrowUpRight size={18} aria-hidden="true" /></button>
               <a className={ui.call} href="tel:+917455997333"><Phone size={16} aria-hidden="true" /> +91 74559 97333</a>
@@ -204,13 +206,13 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
 
           <div className={ui.panel}>
             <div className={ui.panelHead}><span>DRIVE CITIES · 2027–28</span><span className={ui.status}><span aria-hidden="true" /> Registrations open</span></div>
-            {isUttarakhand && <div role="group" aria-label="Filter drive towns by region" className="flex gap-2 border-b border-white/15 p-3">{["Garhwal", "Kumaun"].map(area => <button type="button" key={area} aria-pressed={activeArea === area} onClick={() => setActiveArea(area)} className="min-h-12 flex-1 rounded-sm border border-white/20 px-4 py-3 text-[15px] font-semibold text-[#eee8d7] transition-colors aria-pressed:border-[#ecd2a0] aria-pressed:bg-[#ecd2a0] aria-pressed:text-[#143c30] hover:border-[#ecd2a0]">{area} <span className="ml-2 text-[12px] opacity-75">{stops.filter(stop => stop.area === area).length.toString().padStart(2, "0")}</span></button>)}</div>}
-            {isUttarakhand && <p className="sr-only" role="status">Showing {activeArea} admission drive towns</p>}
-            <ul className={ui.stops} aria-label={isUttarakhand ? `${activeArea} admission drive towns` : "Admission drive cities"}>
-              {stops.filter(stop => !isUttarakhand || stop.area === activeArea).map(({ city, area, date, venue }, index) => (
+            {hasRegions && <div role="group" aria-label="Filter drive towns by region" className="flex gap-2 border-b border-white/15 p-3">{regions.map(area => <button type="button" key={area} aria-pressed={activeArea === area} onClick={() => setActiveArea(area)} className="min-h-12 flex-1 rounded-sm border border-white/20 px-4 py-3 text-[15px] font-semibold text-[#eee8d7] transition-colors aria-pressed:border-[#ecd2a0] aria-pressed:bg-[#ecd2a0] aria-pressed:text-[#143c30] hover:border-[#ecd2a0]">{area} <span className="ml-2 text-[12px] opacity-75">{stops.filter(stop => stop.area === area).length.toString().padStart(2, "0")}</span></button>)}</div>}
+            {hasRegions && <p className="sr-only" role="status">Showing {activeArea} admission drive towns</p>}
+            <ul className={ui.stops} aria-label={hasRegions ? `${activeArea} admission drive towns` : "Admission drive cities"}>
+              {stops.filter(stop => !hasRegions || stop.area === activeArea).map(({ city, area, date, venue }, index) => (
                 <li key={city} style={{ transitionDelay: `${300 + index * 70}ms` }}>
                   <button className={ui.stop} onClick={() => onRegister({ drive: city, region: city })} aria-haspopup="dialog" aria-label={`Register for the ${city} admission drive`} aria-describedby={`drive-${city.replaceAll(" ", "-")}-date`}>
-                    <span className={ui.city}><span>{city}</span><span>{area ? `${area.toUpperCase()} · UTTARAKHAND` : "MEET THE ADMISSIONS TEAM"}</span></span>
+                    <span className={ui.city}><span>{city}</span><span>{area ? `${area.toUpperCase()} · ${campaign.name.toUpperCase()}` : "MEET THE ADMISSIONS TEAM"}</span></span>
                     <span className={ui.date} id={`drive-${city.replaceAll(" ", "-")}-date`} data-pending={!date}><CalendarDays size={15} aria-hidden="true" />{date ? `${date}${venue ? ` · ${venue}` : ""}` : "Date to be announced"}</span>
                     <span className={ui.action}><span>Register</span><span className={ui.arrow}><ArrowUpRight size={16} aria-hidden="true" /></span></span>
                   </button>
@@ -219,8 +221,8 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
             </ul>
             <div className={ui.elsewhere}>
               <div>
-                <p>{isUttarakhand ? <>From <em>another town?</em></> : <>Questions about <em>the admission drive?</em></>}</p>
-                <p lang={isUttarakhand ? "hi" : undefined}>{isUttarakhand ? uk.elsewhere : "Speak with our team about your city’s session."}</p>
+                <p>{copy ? <>From <em>another town?</em></> : <>Questions about <em>the admission drive?</em></>}</p>
+                <p lang={copy ? "hi" : undefined}>{copy ? copy.elsewhere : "Speak with our team about your city’s session."}</p>
               </div>
               <button className={ui.talk} onClick={onEnquire} aria-haspopup="dialog">Talk to admissions <ArrowUpRight size={16} aria-hidden="true" /></button>
             </div>
@@ -232,7 +234,7 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
               {steps.map(({ title, description }, index) => (
                 <li className={ui.step} key={title}>
                   <span aria-hidden="true">{index + 1}</span>
-                  <div><strong>{title}</strong><p lang={isUttarakhand ? "hi" : undefined}>{isUttarakhand ? uk.steps[index] : description}</p></div>
+                  <div><strong>{title}</strong><p lang={copy ? "hi" : undefined}>{copy ? copy.steps[index] : description}</p></div>
                 </li>
               ))}
             </ol>

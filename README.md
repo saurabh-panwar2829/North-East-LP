@@ -1,6 +1,6 @@
 # Doon Global School — regional admissions
 
-A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 site with separate North East and Uttarakhand admission campaigns. Both use the established forest-green, ivory and gold design, local fonts, school imagery and animations.
+A responsive Next.js 16 + React + TypeScript + Tailwind CSS 4 site with separate North East, Uttarakhand and Uttar Pradesh admission campaigns. All use the established forest-green, ivory and gold design, local fonts, school imagery and animations.
 
 ## Campaign routes
 
@@ -8,20 +8,23 @@ Run one server with `npm.cmd run dev`, then open:
 
 - North East: http://localhost:3000/north-east
 - Uttarakhand (Garhwal & Kumaun): http://localhost:3000/uttarakhand
+- Uttar Pradesh: http://localhost:3000/uttar-pradesh
 
-The app's `/` URL temporarily redirects to `/north-east`, preserving query parameters such as UTM tags. Footer links switch between the campaigns. Both routes have their own page title, description, canonical and Open Graph URL. Set `NEXT_PUBLIC_SITE_URL` to the deployed origin before building.
+The app's `/` URL temporarily redirects to `/north-east`, preserving query parameters such as UTM tags. Footer links switch between the campaigns. Each route has its own page title, description, canonical and Open Graph URL. Set `NEXT_PUBLIC_SITE_URL` to the deployed origin before building.
 
 `src/lib/campaigns.ts` is the single campaign configuration. North East retains Guwahati, Aizawl, Itanagar, Jorhat, Dimapur, Siliguri and Kolkata. Uttarakhand has Garhwal/Kumaun filters, with Srinagar, Pauri, Kotdwar and New Tehri under Garhwal; Haldwani, Almora, Rudrapur and Pithoragarh under Kumaun. These 8 towns were approved as interest-registration options, with dates/venues still unconfirmed. Edit each stop's `date` and `venue` in this file when confirmed. Other Uttarakhand towns/villages can request a callback through the form.
 
-Both pages share `src/components/campaign-page.tsx` and the design components. A keyed `CampaignProvider` supplies region-specific copy and options and resets form state when switching routes. Images and fonts remain shared under `public/`; there is no second standalone project or separate port.
+Uttar Pradesh includes the approved eight interest-registration cities: Meerut, Muzaffarnagar, Saharanpur, Ghaziabad, Noida, Lucknow, Kanpur and Bareilly. The drive panel groups them under West UP and Central UP; dates and venues remain to be announced. Other UP cities and villages can request a callback. `otherTown` and `driveRegions` in the campaign configuration control these regional form and filter options.
 
-Uttarakhand combines English, Hindi and Garhwali. All six FAQ questions and answers use Hindi. The six school-life photo cards have English labels and headings, with Hindi descriptions and image alternatives. The hero and family passages include Garhwali, while navigation and other headings retain English. The regional passages live in `src/lib/uttarakhand-copy.ts`, with `lang="hi"` / `lang="gbm"` at their render sites. `src/app/uttarakhand/layout.tsx` loads the locally hosted Noto Sans Devanagari font (SIL Open Font License in `public/fonts/`) only for that route. North East keeps its existing English copy.
+All pages share `src/components/campaign-page.tsx` and the design components. A keyed `CampaignProvider` supplies region-specific copy and options and resets form state when switching routes. Images and fonts remain shared under `public/`; there is no second standalone project or separate port.
 
-The form sends a `campaign` ID to `/api/enquiry`. Server validation rejects towns and drive choices belonging to the other campaign. Prepared email/WhatsApp messages identify the campaign. Optional webhook payloads include `campaign` and a derived `source`: `north-east-landing-page` or `uttarakhand-garhwal-kumaun-landing-page`. Old clients without a campaign ID continue to use North East validation. Unknown explicit IDs are rejected.
+Uttarakhand combines English, Hindi and Garhwali; Uttar Pradesh uses English and Hindi. Both have six Hindi FAQ questions and answers, and photo cards with English labels/headings and Hindi descriptions/image alternatives. Regional passages live in `src/lib/uttarakhand-copy.ts` and `src/lib/uttar-pradesh-copy.ts`, with shared school information in `src/lib/hindi-school-copy.ts`. `getRegionalCopy` selects the correct content and language tags. Both regional layouts use `src/components/devanagari-layout.tsx` to load the locally hosted Kalam handwritten font (regular and bold) (SIL Open Font License in `public/fonts/`). North East keeps its existing English copy.
 
-Run `npm.cmd run test:routes` for both routes, metadata, query-preserving redirect, cross-campaign validation, client navigation, mobile layouts and enquiry flow. The existing `npm.cmd run test:browser` checks `/north-east`. Both accept `BASE_URL` (default `http://localhost:3000`). Route screenshots are in `artifacts/campaigns/`. Local test submissions must use a server with the CRM webhook unset.
+The form sends a `campaign` ID to `/api/enquiry`. Server validation rejects towns and drive choices belonging to another campaign. Prepared email/WhatsApp messages identify the campaign and use its state name for custom towns. Optional webhook payloads include `campaign` and a derived `source`: `north-east-landing-page`, `uttarakhand-garhwal-kumaun-landing-page` or `uttar-pradesh-landing-page`. Old clients without a campaign ID continue to use North East validation. Unknown explicit IDs are rejected.
 
-These are local source changes. To expose `/north-east` and `/uttarakhand` on the school's existing public domain, its hosting must serve these routes, `/api/enquiry`, shared assets and Next.js build assets from this application. The existing public school homepage is not included in this repository and has not been deployed or replaced by this task.
+Run `npm.cmd run test:routes` for all three routes, metadata, query-preserving redirect, cross-campaign validation, client navigation, mobile layouts and enquiry flow, including all eight UP city presets and custom-town registration. The existing `npm.cmd run test:browser` checks `/north-east`. Both accept `BASE_URL` (default `http://localhost:3000`). Route screenshots are in `artifacts/campaigns/`. Local test submissions must use a server with the CRM webhook unset.
+
+These are local source changes. To expose `/north-east`, `/uttarakhand` and `/uttar-pradesh` on the school's existing public domain, its hosting must serve these routes, `/api/enquiry`, shared assets and Next.js build assets from this application. The existing public school homepage is not included in this repository and has not been deployed or replaced by this task.
 
 ## Run locally
 
@@ -63,7 +66,7 @@ Before connecting a public campaign, use the receiving CRM’s deduplication, sp
 
 ## Project map
 
-- `src/app/north-east/page.tsx` and `src/app/uttarakhand/page.tsx`: route entry points and metadata; `src/app/page.tsx` supplies the root fallback.
+- `src/app/north-east/page.tsx`, `src/app/uttarakhand/page.tsx` and `src/app/uttar-pradesh/page.tsx`: route entry points and metadata; `src/app/page.tsx` supplies the root fallback.
 - `src/components/campaign-page.tsx`: shared page composition and admissions/privacy dialogs.
 - `src/lib/campaigns.ts`: campaign copy, cities, hometown groups, confirmed dates/venues and lead-source names.
 - `src/app/globals.css`: Tailwind import and theme tokens only; no custom selectors or component rules.

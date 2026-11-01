@@ -1,13 +1,12 @@
 "use client";
 
-import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+import { getRegionalCopy } from "@/lib/regional-copy";
 
 import { useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { ArrowRight, CalendarDays, CheckCircle2, ChevronDown, GraduationCap, LoaderCircle, LockKeyhole, Mail, MapPin, MessageCircle, Phone, User } from "lucide-react";
 import { CLASS_OPTIONS, INTERESTS, validateEnquiry, type Enquiry } from "@/lib/enquiry";
 import { useCampaign } from "@/components/campaign-context";
-import { OTHER_TOWN } from "@/lib/campaigns";
 import type { EnquiryPreset } from "@/components/admission-drive";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
@@ -52,7 +51,7 @@ const ui: Record<string, string> = {
 
 export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy: () => void; preset?: EnquiryPreset | null }) {
   const campaign = useCampaign();
-  const isUttarakhand = campaign.id === "uttarakhand";
+  const copy = getRegionalCopy(campaign.id);
   const [region, setRegion] = useState(preset?.region ?? campaign.defaultTown);
   const [drive, setDrive] = useState<string>(preset?.drive ?? "");
   const [appliedPreset, setAppliedPreset] = useState(preset);
@@ -108,7 +107,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
   return (
     <div className={ui.card} id="enquire">
       <aside className={ui.aside} aria-label="Doon Global School admissions">
-        <div className={ui.asidePhoto}><Image src={isUttarakhand ? "/images/life-at-dgs/campus-academics.webp" : "/images/life-at-dgs/academics.webp"} alt={isUttarakhand ? "Doon Global School students learning together in the science laboratory" : "Illustrative North East Indian student studying in a school library"} fill sizes="(max-width: 700px) 400px, 750px" /></div>
+        <div className={ui.asidePhoto}><Image src={copy ? "/images/life-at-dgs/campus-academics.webp" : "/images/life-at-dgs/academics.webp"} alt={copy ? "Doon Global School students learning together in the science laboratory" : "Illustrative North East Indian student studying in a school library"} fill sizes="(max-width: 700px) 400px, 750px" /></div>
         <div className={ui.shade} />
         <div className={ui.asideContent}>
           <Image className={ui.logo} src="/images/logo-white.webp" alt="Doon Global School" width={105} height={77} />
@@ -125,7 +124,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
         <div className={ui.header}>
           <p className={ui.kicker}><span aria-hidden="true" /> ADMISSIONS OPEN 2027–28</p>
           <h2>Let’s start with<br /><em>a conversation.</em></h2>
-          <p lang={isUttarakhand ? "hi" : undefined} className={ui.introduction}>{isUttarakhand ? uk.formIntro : "A few details today. A world of possibilities tomorrow."}</p>
+          <p lang={copy ? "hi" : undefined} className={ui.introduction}>{copy ? copy.formIntro : "A few details today. A world of possibilities tomorrow."}</p>
         </div>
 
         {result ? (
@@ -158,17 +157,17 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
                 {error("grade")}
               </div>
               <div className={ui.field}>
-                <label htmlFor="region">{isUttarakhand ? "Your town / city" : "City"} <span>*</span></label>
-                <div className={ui.input}><MapPin aria-hidden="true" /><select id="region" name="region" value={region} onChange={event => setRegion(event.target.value)} required aria-invalid={!!errors.region} aria-describedby={errors.region ? "region-error" : undefined}><option value="" disabled>Select your city</option>{campaign.homeGroups.map(group => <optgroup key={group.label} label={group.label}>{group.towns.map(city => <option key={city} value={city}>{city}</option>)}</optgroup>)}{isUttarakhand && <option value={OTHER_TOWN}>{OTHER_TOWN}</option>}</select><ChevronDown className={ui.chevron} aria-hidden="true" /></div>
+                <label htmlFor="region">{copy ? "Your town / city" : "City"} <span>*</span></label>
+                <div className={ui.input}><MapPin aria-hidden="true" /><select id="region" name="region" value={region} onChange={event => setRegion(event.target.value)} required aria-invalid={!!errors.region} aria-describedby={errors.region ? "region-error" : undefined}><option value="" disabled>Select your city</option>{campaign.homeGroups.map(group => <optgroup key={group.label} label={group.label}>{group.towns.map(city => <option key={city} value={city}>{city}</option>)}</optgroup>)}{campaign.otherTown && <option value={campaign.otherTown}>{campaign.otherTown}</option>}</select><ChevronDown className={ui.chevron} aria-hidden="true" /></div>
                 {error("region")}
               </div>
             </div>
-            {isUttarakhand && region === OTHER_TOWN && <div className={ui.field}><label htmlFor="other-town">Town / village <span>*</span></label><div className={ui.input}><MapPin aria-hidden="true" /><input id="other-town" name="city" defaultValue={draft?.city ?? ""} placeholder="Your town or village in Uttarakhand" maxLength={80} required aria-invalid={!!errors.city} aria-describedby={errors.city ? "city-error" : undefined} /></div>{error("city")}</div>}
+            {campaign.otherTown && region === campaign.otherTown && <div className={ui.field}><label htmlFor="other-town">Town / village <span>*</span></label><div className={ui.input}><MapPin aria-hidden="true" /><input id="other-town" name="city" defaultValue={draft?.city ?? ""} placeholder={`Your town or village in ${campaign.name}`} maxLength={80} required aria-invalid={!!errors.city} aria-describedby={errors.city ? "city-error" : undefined} /></div>{error("city")}</div>}
             <div className={ui.field}>
               <label htmlFor="drive">{campaign.name} admission drive</label>
               <div className={ui.input}><CalendarDays aria-hidden="true" /><select id="drive" name="drive" value={drive} onChange={event => setDrive(event.target.value)} aria-invalid={!!errors.drive} aria-describedby={errors.drive ? "drive-error" : undefined}><option value="">Not now — just a callback</option>{campaign.driveStops.map(({ city, area }) => <option key={city} value={city}>Register for {city}{area ? ` · ${area}` : ""}</option>)}</select><ChevronDown className={ui.chevron} aria-hidden="true" /></div>
               {error("drive")}
-              {isUttarakhand && drive && <p lang="hi" className="mt-2 text-[13px] leading-relaxed text-[#626b56]">{uk.formNote}</p>}
+              {copy && drive && <p lang="hi" className="mt-2 text-[13px] leading-relaxed text-[#626b56]">{copy.formNote}</p>}
             </div>
             <fieldset className={ui.interests} aria-invalid={!!errors.interest} aria-describedby={errors.interest ? "interest-error" : undefined}>
               <legend>I’m interested in</legend>
@@ -177,7 +176,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
             </fieldset>
             <div className={ui.consent}>
               <input id="enquiry-consent" type="checkbox" name="consent" defaultChecked={draft?.consent ?? false} required aria-invalid={!!errors.consent} aria-describedby={errors.consent ? "consent-error" : undefined} />
-              <div><label lang={isUttarakhand ? "hi" : undefined} htmlFor="enquiry-consent">{isUttarakhand ? uk.consent : "I agree to be contacted about my enquiry."}</label>{" "}<button type="button" onClick={onPrivacy}>Privacy details</button></div>
+              <div><label lang={copy ? "hi" : undefined} htmlFor="enquiry-consent">{copy ? copy.consent : "I agree to be contacted about my enquiry."}</label>{" "}<button type="button" onClick={onPrivacy}>Privacy details</button></div>
             </div>
             {error("consent")}
             <div className={ui.honeypot} aria-hidden="true"><label htmlFor="website">Leave this empty</label><input id="website" name="website" tabIndex={-1} autoComplete="off" /></div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { uttarakhandCopy as uk } from "@/lib/uttarakhand-copy";
+import { getRegionalCopy } from "@/lib/regional-copy";
 
 import Image from "next/image";
 import { ArrowUpRight, Compass, GraduationCap, House, MapPin, Users } from "lucide-react";
@@ -52,7 +52,7 @@ const benefits = [
 
 export default function BoardingBenefits({ onEnquire }: { onEnquire: () => void }) {
   const campaign = useCampaign();
-  const isUttarakhand = campaign.id === "uttarakhand";
+  const copy = getRegionalCopy(campaign.id);
   const cityLabel = campaignCityLabel(campaign);
   return (
     <section className={ui.section} id="boarding" aria-labelledby="boarding-heading">
@@ -62,14 +62,14 @@ export default function BoardingBenefits({ onEnquire }: { onEnquire: () => void 
             <p className={ui.eyebrow}><span aria-hidden="true" /> FOR FAMILIES IN {campaign.audience.toUpperCase()}</p>
             <h2 id="boarding-heading">{campaign.name} roots.<br /><em>Brighter horizons.</em></h2>
           </div>
-          <p lang={isUttarakhand ? "gbm" : undefined} className={ui.introduction}>{isUttarakhand ? uk.boardingIntro : `For families from ${cityLabel}, discover what a new chapter at DGS can offer your child—inside and beyond the classroom.`}</p>
+          <p lang={copy?.familyLanguage} className={ui.introduction}>{copy ? copy.boardingIntro : `For families from ${cityLabel}, discover what a new chapter at DGS can offer your child—inside and beyond the classroom.`}</p>
         </div>
 
         <div className={ui.content}>
           <figure className={ui.visual} data-reveal data-parallax>
             <Image
-              src={isUttarakhand ? "/images/life-at-dgs/campus-boarding.webp" : "/images/life-at-dgs/boarding.webp"}
-              alt={isUttarakhand ? "Doon Global School student writing in a notebook during study time" : "Illustrative North East Indian students sharing a friendly moment in a boarding-school common room"}
+              src={copy ? "/images/life-at-dgs/campus-boarding.webp" : "/images/life-at-dgs/boarding.webp"}
+              alt={copy ? "Doon Global School student writing in a notebook during study time" : "Illustrative North East Indian students sharing a friendly moment in a boarding-school common room"}
               fill
               sizes="(max-width: 800px) 100vw, (max-width: 1440px) 40vw, 510px"
             />
@@ -82,7 +82,7 @@ export default function BoardingBenefits({ onEnquire }: { onEnquire: () => void 
               <article className={ui.benefit} key={title} data-reveal data-reveal-delay={index % 2 + 1}>
                 <span className={ui.icon}><Icon size={25} strokeWidth={1.3} aria-hidden="true" /></span>
                 <h3>{title}</h3>
-                <p lang={isUttarakhand ? "hi" : undefined}>{isUttarakhand ? uk.benefits[index] : description}</p>
+                <p lang={copy ? "hi" : undefined}>{copy ? copy.benefits[index] : description}</p>
               </article>
             ))}
           </div>
@@ -92,8 +92,8 @@ export default function BoardingBenefits({ onEnquire }: { onEnquire: () => void 
           <div className={ui.nextStepCopy}>
             <span className={ui.nextStepIcon}><Compass size={27} strokeWidth={1.2} aria-hidden="true" /></span>
             <div>
-              <h3>{isUttarakhand ? "A new chapter, in your own state." : "A clearer next step, even from afar."}</h3>
-              <p lang={isUttarakhand ? "hi" : undefined}>{isUttarakhand ? uk.nextStep : "Talk through classes, boarding, fees and a campus visit with admissions."}</p>
+              <h3>{campaign.id === "uttarakhand" ? "A new chapter, in your own state." : copy ? "A new chapter in Dehradun." : "A clearer next step, even from afar."}</h3>
+              <p lang={copy ? "hi" : undefined}>{copy ? copy.nextStep : "Talk through classes, boarding, fees and a campus visit with admissions."}</p>
               <span className={ui.eligibility}>Boys’ boarding · Classes 3–12 · Dehradun</span>
             </div>
           </div>

@@ -79,9 +79,7 @@ try {
     assert.ok(Math.abs(radiusBefore - radiusAfter) < 1, 'Partner stays on its circular orbit');
   }
   assert.ok(orbit.moved.orientation.every((value, index) => Math.abs(value - [1, 0, 0, 1][index]) < .001), 'Counter-rotation keeps logos upright');
-  await page.getByRole('button', { name: 'Pause programme rotation', exact: true }).click();
-  await page.waitForFunction(() => document.querySelector('.dgs-partners-section-partners').getAnimations().every(animation => animation.playState === 'paused'));
-  await page.getByRole('button', { name: 'Resume programme rotation', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: /Pause programme rotation|Resume programme rotation/ }).count(), 0);
   await page.waitForFunction(() => document.querySelector('.dgs-partners-section-partners').getAnimations().some(animation => animation.playState === 'running'));
   await page.locator('.group\\/orbit').hover({ position: { x: 5, y: 5 } });
   await page.waitForFunction(() => document.querySelector('.dgs-partners-section-partners').getAnimations().every(animation => animation.playState === 'paused'));

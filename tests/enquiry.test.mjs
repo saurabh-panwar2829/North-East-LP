@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateEnquiry, createEnquiryEmail, createEnquiryWhatsApp } from '../src/lib/enquiry.ts';
-import { CAMPAIGNS, OTHER_TOWN } from '../src/lib/campaigns.ts';
+import { CAMPAIGNS, OTHER_TOWN, OTHER_UP_TOWN } from '../src/lib/campaigns.ts';
 
 const valid = { name: 'Test Parent', phone: '9876543210', grade: '6', region: 'Siliguri', city: '', interest: 'Boarding admissions', consent: true, website: '' };
 test('normalizes Indian international and spaced phone numbers', () => {
@@ -72,6 +72,9 @@ test('validates each campaign against its own drive and hometown options', () =>
   for (const input of [
     { campaign: 'uttarakhand', region: 'Siliguri', drive: 'Guwahati' },
     { campaign: 'north-east', region: 'Haldwani', drive: 'Almora' },
+    { campaign: 'uttar-pradesh', region: 'Haldwani', drive: 'Almora' },
+    { campaign: 'uttarakhand', region: 'Meerut', drive: 'Lucknow' },
+    { campaign: 'north-east', region: 'Meerut', drive: 'Lucknow' },
   ]) {
     const result = validateEnquiry({ ...valid, ...input });
     assert.ok(result.errors.region);
@@ -108,4 +111,28 @@ test('Uttarakhand messages identify the selected region and preserve encoded par
   assert.equal(whatsapp.searchParams.get('text'), email.searchParams.get('body'));
   const custom = new URL(createEnquiryEmail({ ...input, region: OTHER_TOWN, city: 'Lansdowne' }));
   assert.match(custom.searchParams.get('body'), /Lansdowne, Uttarakhand/);
+});
+
+test('UP custom hometowns are bounded and restricted to their campaign', () => {
+  const enquiry = { ...valid, campaign: 'uttar-pradesh', region: OTHER_UP_TOWN };
+  for (const city of ['', 'A', 'x'.repeat(81), 'Town\nExtra field']) assert.ok(validateEnquiry({ ...enquiry, city }).errors.city);
+  assert.equal(validateEnquiry({ ...enquiry, city: 'Bijnor' }).data.city, 'Bijnor');
+  assert.ok(validateEnquiry({ ...enquiry, campaign: 'uttarakhand', city: 'Bijnor' }).errors.region);
+  assert.ok(validateEnquiry({ ...enquiry, region: OTHER_TOWN, city: 'Bijnor' }).errors.region);
+  assert.ok(validateEnquiry({ ...enquiry, campaign: 'north-east', city: 'Bijnor' }).errors.region);
+});
+
+test('UP enquiries identify the campaign in email and WhatsApp without borrowing another region', () => {
+  const input = { ...valid, campaign: 'uttar-pradesh', region: 'Meerut', drive: 'Lucknow', name: 'Parent & Guardian' };
+  const email = new URL(createEnquiryEmail(input));
+  const body = email.searchParams.get('body');
+  assert.match(email.searchParams.get('subject'), /Uttar Pradesh admission drive · Lucknow/);
+  assert.match(body, /City: Meerut/);
+  assert.match(body, /Campaign: Uttar Pradesh/);
+  assert.match(body, /confirm the date and venue/);
+  assert.doesNotMatch(body, /Uttarakhand|Garhwal|Kumaun|North East/);
+  assert.equal(new URL(createEnquiryWhatsApp(input)).searchParams.get('text'), body);
+  const custom = new URL(createEnquiryEmail({ ...input, region: OTHER_UP_TOWN, city: 'Bijnor', drive: '' }));
+  assert.match(custom.searchParams.get('body'), /City: Bijnor, Uttar Pradesh/);
+  assert.equal(CAMPAIGNS['uttar-pradesh'].source, 'uttar-pradesh-landing-page');
 });

@@ -29,7 +29,7 @@ try {
   const redirect = await context.request.get(`${base}/?utm_source=route-check`, { maxRedirects: 0 });
   assert.equal(redirect.status(), 307);
   assert.equal(redirect.headers().location, '/north-east?utm_source=route-check');
-  for (const campaign of ['north-east', 'uttarakhand']) {
+  for (const campaign of ['north-east', 'uttar-pradesh', 'uttarakhand']) {
     const response = await page.goto(`${base}/${campaign}`, { waitUntil: 'networkidle' });
     assert.equal(response.status(), 200);
     assert.ok((await page.locator('link[rel="canonical"]').getAttribute('href')).endsWith(`/${campaign}`));
@@ -119,8 +119,87 @@ try {
   await page.getByRole('button', { name: 'Kumaun 04', exact: true }).click();
   await page.getByRole('button', { name: 'Register for the Almora admission drive', exact: true }).click();
   assert.equal(await page.locator('#drive').inputValue(), 'Almora');
+  await page.keyboard.press('Escape');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttar Pradesh', exact: true }).click();
+  await page.waitForURL('**/uttar-pradesh');
+  await page.locator('#hero-heading [lang="hi"]').waitFor();
+  await page.waitForFunction(() => document.title.includes('Uttar Pradesh'));
+  assert.match(await page.title(), /Uttar Pradesh/);
+  assert.equal(await page.locator('[lang="gbm"]').count(), 0);
+  assert.equal(await page.locator('#hero-heading [lang="hi"]').innerText(), 'बड़े सपनों की नई शुरुआत।');
+  assert.doesNotMatch(await page.locator('main').innerText(), /Garhwal|Kumaun|Guwahati|Siliguri|own state|गढ़वाल|कुमाऊँ/);
+  assert.equal(await page.locator('#faqs button[id^="question-"] span[lang="hi"]').count(), 6);
+  assert.equal(await page.locator('#life-at-dgs article h3[lang="hi"]').count(), 0);
+  assert.equal(await page.locator('#life-at-dgs .dgs-school-life-section-text > p[lang="hi"]').count(), 6);
+  for (const width of [360, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert.ok(await page.locator('#hero-heading [lang="hi"]').evaluate(el => el.getBoundingClientRect().right <= el.parentElement.getBoundingClientRect().right + 1), `UP hero at ${width}px`);
+  }
+  for (const [region, cities] of [['West UP 06', ['Meerut', 'Muzaffarnagar', 'Saharanpur', 'Ghaziabad', 'Noida', 'Bareilly']], ['Central UP 02', ['Lucknow', 'Kanpur']]]) {
+    await page.getByRole('button', { name: region, exact: true }).click();
+    assert.equal(await page.locator('.dgs-admission-drive-stops li').count(), cities.length);
+    assert.equal(await page.locator('.dgs-admission-drive-stops [data-pending="true"]').count(), cities.length);
+    for (const city of cities) {
+      await page.getByRole('button', { name: `Register for the ${city} admission drive`, exact: true }).click();
+      assert.equal(await page.locator('#region').inputValue(), city);
+      assert.equal(await page.locator('#drive').inputValue(), city);
+      assert.equal(await page.locator('#parent-name').inputValue(), '');
+      assert.doesNotMatch(await page.locator('#drive').innerText(), /Guwahati|Haldwani/);
+      await page.keyboard.press('Escape');
+    }
+  }
+  await page.getByRole('button', { name: 'West UP 06', exact: true }).click();
+  await page.locator('.dgs-admission-drive-content').screenshot({ path: path('uttar-pradesh-drive'), style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
+  await page.getByRole('button', { name: 'Register for the Meerut admission drive', exact: true }).click();
+  await page.locator('#parent-name').fill('UP Preview Parent');
+  await page.locator('#mobile').fill('9876543210');
+  await page.locator('#grade').selectOption('6');
+  await page.locator('#enquiry-consent').check();
+  await page.locator('.admissions-dialog').screenshot({ path: path('uttar-pradesh-form-desktop') });
+  const upSubmitted = page.waitForRequest(request => request.url().endsWith('/api/enquiry') && request.method() === 'POST');
+  await page.getByRole('button', { name: 'Register for Meerut', exact: true }).click();
+  assert.equal((await upSubmitted).postDataJSON().campaign, 'uttar-pradesh');
+  await page.getByText('Your enquiry is ready.', { exact: true }).waitFor();
+  const upEmail = new URL(await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href'));
+  assert.match(upEmail.searchParams.get('subject'), /Uttar Pradesh admission drive · Meerut/);
+  assert.doesNotMatch(upEmail.searchParams.get('body'), /Garhwal|Kumaun|Uttarakhand|North East/);
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'Open navigation' }).click();
+  await page.getByRole('button', { name: 'Close navigation' }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.locator('.mobile-cta').getByRole('button', { name: 'Enquire now' }).click();
+  assert.equal(await page.locator('#drive').inputValue(), '');
+  await page.locator('#region').selectOption('Other town in Uttar Pradesh');
+  assert.match(await page.locator('#other-town').getAttribute('placeholder'), /Uttar Pradesh/);
+  await page.getByRole('button', { name: 'Request a callback', exact: true }).click();
+  await page.locator('#city-error').waitFor();
+  await page.locator('#other-town').fill('Bijnor');
+  await page.locator('.admissions-dialog').screenshot({ path: path('uttar-pradesh-form-mobile') });
+  await page.getByRole('button', { name: 'Request a callback', exact: true }).click();
+  await page.getByText('Your enquiry is ready.', { exact: true }).waitFor();
+  const upCustom = new URL(await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href'));
+  assert.match(upCustom.searchParams.get('body'), /Bijnor, Uttar Pradesh/);
+  await page.keyboard.press('Escape');
+  for (const invalid of [{ ...valid, campaign: 'uttar-pradesh' }, { ...valid, region: 'Meerut', drive: 'Lucknow' }, { ...valid, campaign: 'north-east', region: 'Meerut', drive: 'Lucknow' }]) {
+    assert.equal((await context.request.post(`${base}/api/enquiry`, { data: invalid })).status(), 400);
+  }
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Central UP 02', exact: true }).click();
+  await page.getByRole('button', { name: 'Register for the Lucknow admission drive', exact: true }).click();
+  assert.equal(await page.locator('#drive').inputValue(), 'Lucknow');
+  await page.keyboard.press('Escape');
+  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal & Kumaun', exact: true }).click();
+  await page.waitForURL('**/uttarakhand');
+  await page.getByRole('button', { name: 'Register for the Srinagar admission drive', exact: true }).click();
+  assert.equal(await page.locator('#parent-name').inputValue(), '');
+  assert.equal(await page.locator('#region').inputValue(), 'Srinagar');
+  assert.equal(await page.locator('#hero-heading [lang="gbm"]').innerText(), 'नौन्याळौं कु भलु भोल।');
   assert.deepEqual(errors, []);
-  console.log('Passed: route redirect/query preservation, metadata, both campaigns, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
+  console.log('Passed: three campaigns, metadata, redirect/query preservation, eight UP cities, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
 } finally {
   await browser.close();
 }
