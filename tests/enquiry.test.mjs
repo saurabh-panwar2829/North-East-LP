@@ -73,8 +73,8 @@ test('validates each campaign against its own drive and hometown options', () =>
     { campaign: 'uttarakhand', region: 'Siliguri', drive: 'Guwahati' },
     { campaign: 'north-east', region: 'Haldwani', drive: 'Almora' },
     { campaign: 'uttar-pradesh', region: 'Haldwani', drive: 'Almora' },
-    { campaign: 'uttarakhand', region: 'Meerut', drive: 'Lucknow' },
-    { campaign: 'north-east', region: 'Meerut', drive: 'Lucknow' },
+    { campaign: 'uttarakhand', region: 'Meerut', drive: 'Varanasi' },
+    { campaign: 'north-east', region: 'Meerut', drive: 'Varanasi' },
   ]) {
     const result = validateEnquiry({ ...valid, ...input });
     assert.ok(result.errors.region);
@@ -93,8 +93,8 @@ test('rejects invalid campaign identifiers and keeps legacy North East clients w
 test('custom Uttarakhand hometown requires bounded single-line text', () => {
   const enquiry = { ...valid, campaign: 'uttarakhand', region: OTHER_TOWN };
   for (const city of ['', 'A', 'x'.repeat(81), 'Town\nExtra field']) assert.ok(validateEnquiry({ ...enquiry, city }).errors.city);
-  assert.equal(validateEnquiry({ ...enquiry, city: 'Lansdowne' }).data.city, 'Lansdowne');
-  assert.ok(validateEnquiry({ ...enquiry, campaign: 'north-east', city: 'Lansdowne' }).errors.region);
+  assert.equal(validateEnquiry({ ...enquiry, city: 'Chakrata' }).data.city, 'Chakrata');
+  assert.ok(validateEnquiry({ ...enquiry, campaign: 'north-east', city: 'Chakrata' }).errors.region);
   assert.equal(validateEnquiry({ ...valid, city: 'old custom town' }).data.city, '');
 });
 
@@ -109,8 +109,8 @@ test('Uttarakhand messages identify the selected region and preserve encoded par
   assert.match(email.searchParams.get('body'), /confirm the date and venue/);
   assert.doesNotMatch(email.searchParams.get('body'), /North East|Siliguri|Guwahati/);
   assert.equal(whatsapp.searchParams.get('text'), email.searchParams.get('body'));
-  const custom = new URL(createEnquiryEmail({ ...input, region: OTHER_TOWN, city: 'Lansdowne' }));
-  assert.match(custom.searchParams.get('body'), /Lansdowne, Uttarakhand/);
+  const custom = new URL(createEnquiryEmail({ ...input, region: OTHER_TOWN, city: 'Chakrata' }));
+  assert.match(custom.searchParams.get('body'), /Chakrata, Uttarakhand/);
 });
 
 test('UP custom hometowns are bounded and restricted to their campaign', () => {
@@ -123,10 +123,10 @@ test('UP custom hometowns are bounded and restricted to their campaign', () => {
 });
 
 test('UP enquiries identify the campaign in email and WhatsApp without borrowing another region', () => {
-  const input = { ...valid, campaign: 'uttar-pradesh', region: 'Meerut', drive: 'Lucknow', name: 'Parent & Guardian' };
+  const input = { ...valid, campaign: 'uttar-pradesh', region: 'Meerut', drive: 'Varanasi', name: 'Parent & Guardian' };
   const email = new URL(createEnquiryEmail(input));
   const body = email.searchParams.get('body');
-  assert.match(email.searchParams.get('subject'), /Uttar Pradesh admission drive · Lucknow/);
+  assert.match(email.searchParams.get('subject'), /Uttar Pradesh admission drive · Varanasi/);
   assert.match(body, /City: Meerut/);
   assert.match(body, /Campaign: Uttar Pradesh/);
   assert.match(body, /confirm the date and venue/);

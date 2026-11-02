@@ -69,7 +69,7 @@ try {
   assert.match(email.searchParams.get('subject'), /Uttarakhand/);
   // Inspect prepared links only; no WhatsApp or email message is sent.
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Garhwal 04', exact: true }).click();
+  await page.getByRole('button', { name: 'Garhwal 09', exact: true }).click();
   await page.getByRole('button', { name: 'Register for the New Tehri admission drive', exact: true }).click();
   assert.equal(await page.locator('#drive').inputValue(), 'New Tehri');
   assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent');
@@ -79,11 +79,11 @@ try {
   await page.locator('#region').selectOption('Other town in Uttarakhand');
   await page.getByRole('button', { name: 'Request a callback', exact: true }).click();
   await page.locator('#city-error').waitFor();
-  await page.locator('#other-town').fill('Lansdowne');
+  await page.locator('#other-town').fill('Chakrata');
   await page.getByRole('button', { name: 'Request a callback', exact: true }).click();
   await page.getByText('Your enquiry is ready.', { exact: true }).waitFor();
   const custom = new URL(await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href'));
-  assert.match(custom.searchParams.get('body'), /Lansdowne, Uttarakhand/);
+  assert.match(custom.searchParams.get('body'), /Chakrata, Uttarakhand/);
   await page.keyboard.press('Escape');
 
   // Client-side navigation must remount campaign state and form choices.
@@ -137,7 +137,7 @@ try {
     await page.setViewportSize({ width, height: 900 });
     assert.ok(await page.locator('#hero-heading [lang="hi"]').evaluate(el => el.getBoundingClientRect().right <= el.parentElement.getBoundingClientRect().right + 1), `UP hero at ${width}px`);
   }
-  for (const [region, cities] of [['West UP 06', ['Meerut', 'Muzaffarnagar', 'Saharanpur', 'Ghaziabad', 'Noida', 'Bareilly']], ['Central UP 02', ['Lucknow', 'Kanpur']]]) {
+  for (const [region, cities] of [['East UP 11', ['Varanasi', 'Gorakhpur', 'Prayagraj', 'Azamgarh', 'Mau', 'Jaunpur', 'Ghazipur', 'Ballia', 'Deoria', 'Mirzapur', 'Bhadohi']], ['West UP 11', ['Moradabad', 'Bareilly', 'Budaun', 'Hapur', 'Shahjahanpur', 'Chandausi', 'Sambhal', 'Meerut', 'Muzaffarnagar', 'Saharanpur', 'Baghpat']]]) {
     await page.getByRole('button', { name: region, exact: true }).click();
     assert.equal(await page.locator('.dgs-admission-drive-stops li').count(), cities.length);
     assert.equal(await page.locator('.dgs-admission-drive-stops [data-pending="true"]').count(), cities.length);
@@ -150,7 +150,7 @@ try {
       await page.keyboard.press('Escape');
     }
   }
-  await page.getByRole('button', { name: 'West UP 06', exact: true }).click();
+  await page.getByRole('button', { name: 'West UP 11', exact: true }).click();
   await page.locator('.dgs-admission-drive-content').screenshot({ path: path('uttar-pradesh-drive'), style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
   await page.getByRole('button', { name: 'Register for the Meerut admission drive', exact: true }).click();
   await page.locator('#parent-name').fill('UP Preview Parent');
@@ -183,14 +183,14 @@ try {
   const upCustom = new URL(await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href'));
   assert.match(upCustom.searchParams.get('body'), /Bijnor, Uttar Pradesh/);
   await page.keyboard.press('Escape');
-  for (const invalid of [{ ...valid, campaign: 'uttar-pradesh' }, { ...valid, region: 'Meerut', drive: 'Lucknow' }, { ...valid, campaign: 'north-east', region: 'Meerut', drive: 'Lucknow' }]) {
+  for (const invalid of [{ ...valid, campaign: 'uttar-pradesh' }, { ...valid, region: 'Meerut', drive: 'Varanasi' }, { ...valid, campaign: 'north-east', region: 'Meerut', drive: 'Varanasi' }]) {
     assert.equal((await context.request.post(`${base}/api/enquiry`, { data: invalid })).status(), 400);
   }
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByRole('button', { name: 'Central UP 02', exact: true }).click();
-  await page.getByRole('button', { name: 'Register for the Lucknow admission drive', exact: true }).click();
-  assert.equal(await page.locator('#drive').inputValue(), 'Lucknow');
+  await page.getByRole('button', { name: 'East UP 11', exact: true }).click();
+  await page.getByRole('button', { name: 'Register for the Varanasi admission drive', exact: true }).click();
+  assert.equal(await page.locator('#drive').inputValue(), 'Varanasi');
   await page.keyboard.press('Escape');
   await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal & Kumaun', exact: true }).click();
   await page.waitForURL('**/uttarakhand');
@@ -199,7 +199,7 @@ try {
   assert.equal(await page.locator('#region').inputValue(), 'Srinagar');
   assert.equal(await page.locator('#hero-heading [lang="gbm"]').innerText(), 'नौन्याळौं कु भलु भोल।');
   assert.deepEqual(errors, []);
-  console.log('Passed: three campaigns, metadata, redirect/query preservation, eight UP cities, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
+  console.log('Passed: three campaigns, metadata, 13 Uttarakhand drive towns, redirect/query preservation, 22 UP cities, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
 } finally {
   await browser.close();
 }

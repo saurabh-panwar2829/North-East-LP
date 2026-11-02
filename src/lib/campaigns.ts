@@ -1,9 +1,10 @@
 export type CampaignId = "north-east" | "uttarakhand" | "uttar-pradesh";
 export const NORTH_EAST_CITIES = ["Guwahati", "Aizawl", "Itanagar", "Jorhat", "Dimapur", "Siliguri", "Kolkata"] as const;
-export const GARHWAL_CITIES = ["Srinagar", "Pauri", "Kotdwar", "New Tehri"] as const;
+export const GARHWAL_CITIES = ["Srinagar", "Pauri", "Kotdwar", "New Tehri", "Karnaprayag", "Gopeshwar", "Lansdowne", "Uttarkashi", "Rudraprayag"] as const;
 export const KUMAUN_CITIES = ["Haldwani", "Almora", "Rudrapur", "Pithoragarh"] as const;
-export const UTTAR_PRADESH_CITIES = ["Meerut", "Muzaffarnagar", "Saharanpur", "Ghaziabad", "Noida", "Lucknow", "Kanpur", "Bareilly"] as const;
-export type DriveCity = (typeof NORTH_EAST_CITIES)[number] | (typeof GARHWAL_CITIES)[number] | (typeof KUMAUN_CITIES)[number] | (typeof UTTAR_PRADESH_CITIES)[number];
+export const EAST_UP_CITIES = ["Varanasi", "Gorakhpur", "Prayagraj", "Azamgarh", "Mau", "Jaunpur", "Ghazipur", "Ballia", "Deoria", "Mirzapur", "Bhadohi"] as const;
+export const WEST_UP_CITIES = ["Moradabad", "Bareilly", "Budaun", "Hapur", "Shahjahanpur", "Chandausi", "Sambhal", "Meerut", "Muzaffarnagar", "Saharanpur", "Baghpat"] as const;
+export type DriveCity = (typeof NORTH_EAST_CITIES)[number] | (typeof GARHWAL_CITIES)[number] | (typeof KUMAUN_CITIES)[number] | (typeof EAST_UP_CITIES)[number] | (typeof WEST_UP_CITIES)[number];
 export const OTHER_TOWN = "Other town in Uttarakhand";
 export const OTHER_UP_TOWN = "Other town in Uttar Pradesh";
 
@@ -52,7 +53,7 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     otherTown: OTHER_TOWN,
     driveRegions: ["Garhwal", "Kumaun"],
     homeGroups: [
-      { label: "Garhwal", towns: [...GARHWAL_CITIES, "Dehradun", "Haridwar", "Rishikesh", "Chamoli", "Rudraprayag", "Uttarkashi"] },
+      { label: "Garhwal", towns: [...GARHWAL_CITIES, "Dehradun", "Haridwar", "Rishikesh", "Chamoli"] },
       { label: "Kumaun", towns: [...KUMAUN_CITIES, "Nainital", "Bageshwar", "Champawat", "Kashipur", "Ranikhet"] },
     ],
     driveStops: [
@@ -71,12 +72,15 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
     source: "uttar-pradesh-landing-page",
     defaultTown: "",
     otherTown: OTHER_UP_TOWN,
-    driveRegions: ["West UP", "Central UP"],
+    driveRegions: ["East UP", "West UP"],
     homeGroups: [
-      { label: "Admission drive cities", towns: UTTAR_PRADESH_CITIES },
-      { label: "Other UP cities", towns: ["Agra", "Aligarh", "Ayodhya", "Gorakhpur", "Jhansi", "Mathura", "Moradabad", "Prayagraj", "Varanasi"] },
+      { label: "East UP", towns: EAST_UP_CITIES },
+      { label: "West UP", towns: WEST_UP_CITIES },
     ],
-    driveStops: UTTAR_PRADESH_CITIES.map(city => ({ city, area: city === "Lucknow" || city === "Kanpur" ? "Central UP" : "West UP", date: "", venue: "" })),
+    driveStops: [
+      ...EAST_UP_CITIES.map(city => ({ city, area: "East UP", date: "", venue: "" })),
+      ...WEST_UP_CITIES.map(city => ({ city, area: "West UP", date: "", venue: "" })),
+    ],
   },
 };
 
