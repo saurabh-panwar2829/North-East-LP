@@ -15,4 +15,11 @@
   --color-ivory: #faf8f1;
   --color-muted: #6a756e;
   --color-line: #dddcd1;
+
+  /* The sound-on equaliser on a playing reel. */
+  --animate-equalize: equalize .9s ease-in-out infinite;
+  @keyframes equalize {
+    0%, 100% { scale: 1 .35; }
+    50% { scale: 1 1; }
+  }
 }

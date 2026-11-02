@@ -10,6 +10,7 @@ import PartnersSection from "@/components/partners-section";
 import CampusHero from "@/components/campus-hero";
 import SiteHeader from "@/components/site-header";
 import SchoolLifeSection from "@/components/school-life-section";
+import InstagramReelsSection from "@/components/instagram-reels-section";
 import BoardingBenefits from "@/components/boarding-benefits";
 import SiteFooter from "@/components/site-footer";
 import SiteMotion from "@/components/site-motion";
@@ -61,6 +62,8 @@ function CampaignContent() {
       </section>
 
       <SchoolLifeSection />
+
+      <InstagramReelsSection />
 
       <BoardingBenefits onEnquire={openEnquiry} />
 
