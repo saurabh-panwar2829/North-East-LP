@@ -200,7 +200,7 @@ export default function AdmissionDrive({ onRegister, onEnquire }: { onRegister: 
             {copy && <p lang="hi" className={`${enter} text-[14px]! text-[#d9c896]!`}>{copy.driveNote}</p>}
             <div className={`${ui.actions} ${enter}`} style={{ transitionDelay: "240ms" }}>
               <button className={ui.register} onClick={onEnquire} aria-haspopup="dialog">Register your interest <ArrowUpRight size={18} aria-hidden="true" /></button>
-              <a className={ui.call} href="tel:+917455997333"><Phone size={16} aria-hidden="true" /> +91 74559 97333</a>
+              <a className={ui.call} href={`tel:${campaign.admissionsPhone}`}><Phone size={16} aria-hidden="true" /> {campaign.admissionsPhoneLabel}</a>
             </div>
           </div>
 

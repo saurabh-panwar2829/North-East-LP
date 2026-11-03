@@ -137,9 +137,9 @@ export default function FaqSection({ onEnquire }: { onEnquire: () => void }) {
               <button type="button" onClick={onEnquire} aria-haspopup="dialog" className="flex min-h-12 w-full items-center justify-between gap-3 rounded border border-[#e4c68d] bg-[#ecd2a0] px-4 py-3 text-left text-[15px] font-semibold text-[#173c2d] transition-colors hover:bg-[#f6dfb3]">
                 Ask our admissions team <ArrowUpRight size={17} aria-hidden="true" />
               </button>
-              <a href="tel:+917455997333" className="mt-5 flex items-center gap-3 rounded-sm py-1 text-[#ead6ab] transition-colors hover:text-white">
+              <a href={`tel:${campaign.admissionsPhone}`} className="mt-5 flex items-center gap-3 rounded-sm py-1 text-[#ead6ab] transition-colors hover:text-white">
                 <Phone size={16} strokeWidth={1.4} aria-hidden="true" />
-                <span><span className="block text-[12px] tracking-[.5px] text-[#afc3a8]">OR CALL US DIRECTLY</span><span className="mt-1 block font-serif text-[23px] leading-[1.3]">+91 74559 97333</span></span>
+                <span><span className="block text-[12px] tracking-[.5px] text-[#afc3a8]">OR CALL US DIRECTLY</span><span className="mt-1 block font-serif text-[23px] leading-[1.3]">{campaign.admissionsPhoneLabel}</span></span>
               </a>
               <p className="mt-6 border-t border-[#d6c28b26] pt-4 text-[13px] leading-[1.7] text-[#afc3a8]">For families across {campaign.audience}.<br /><span className="text-[#d8d0ad]">Boys’ boarding · Classes 3–12</span></p>
             </div>

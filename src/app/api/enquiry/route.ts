@@ -36,6 +36,6 @@ export async function POST(request: Request) {
     if (!response.ok) throw new Error("Delivery failed");
     return NextResponse.json({ delivery: "sent" }, { headers: { "Cache-Control": "no-store" } });
   } catch {
-    return NextResponse.json({ error: "Your enquiry couldn’t be delivered. Please try again or call +91 74559 97333." }, { status: 502 });
+    return NextResponse.json({ error: `Your enquiry couldn’t be delivered. Please try again or call ${campaign.admissionsPhoneLabel}.` }, { status: 502 });
   }
 }

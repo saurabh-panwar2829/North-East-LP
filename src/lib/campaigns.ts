@@ -10,6 +10,8 @@ export const OTHER_UP_TOWN = "Other town in Uttar Pradesh";
 export type DriveStop = { city: DriveCity; area: string; date: string; venue: string };
 export type Campaign = {
   id: CampaignId;
+  admissionsPhone: string;
+  admissionsPhoneLabel: string;
   name: string;
   eyebrow: string;
   audience: string;
@@ -28,6 +30,8 @@ export type Campaign = {
 export const CAMPAIGNS: Record<CampaignId, Campaign> = {
   "north-east": {
     id: "north-east",
+    admissionsPhone: "+917455997333",
+    admissionsPhoneLabel: "+91 74559 97333",
     name: "North East",
     eyebrow: "NORTH EAST INDIA",
     audience: "Siliguri & North East India",
@@ -41,6 +45,8 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
   },
   uttarakhand: {
     id: "uttarakhand",
+    admissionsPhone: "+919528687660",
+    admissionsPhoneLabel: "+919528687660",
     name: "Uttarakhand",
     eyebrow: "GARHWAL",
     audience: "Garhwal",
@@ -57,6 +63,8 @@ export const CAMPAIGNS: Record<CampaignId, Campaign> = {
   },
   "uttar-pradesh": {
     id: "uttar-pradesh",
+    admissionsPhone: "+917455997333",
+    admissionsPhoneLabel: "+91 74559 97333",
     name: "Uttar Pradesh",
     eyebrow: "UTTAR PRADESH",
     audience: "Uttar Pradesh",

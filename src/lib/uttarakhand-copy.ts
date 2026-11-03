@@ -1,8 +1,10 @@
 import { hindiSchoolCopy } from "./hindi-school-copy";
+import { CAMPAIGNS } from "./campaigns";
 
 // Uttarakhand-specific Hindi and Garhwali passages.
 export const uttarakhandCopy = {
   ...hindiSchoolCopy,
+  faqAdmissions: hindiSchoolCopy.faqAdmissions.replace("+91 74559 97333", CAMPAIGNS.uttarakhand.admissionsPhoneLabel),
   familyLanguage: "gbm",
   heroTagline: "आवा, मिलिक अगनै बढ़ां।",
   hero: "गढ़वाल के परिवारों के लिए, देहरादून में एक नई शुरुआत। CBSE की पढ़ाई और बोर्डिंग जीवन के साथ, आपके बच्चे को सीखने और आगे बढ़ने के अवसर।",

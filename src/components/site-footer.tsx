@@ -68,7 +68,7 @@ export default function SiteFooter({ onEnquire, onPrivacy }: { onEnquire: () => 
           <div className={ui.identity} data-reveal>
             <a href="#home" aria-label="Doon Global School home"><Image src="/images/logo-white.webp" alt="Doon Global School" width={116} height={85} /></a>
             <div className={ui.contact}>
-              <a className={ui.phone} href="tel:+917455997333"><Phone size={15} aria-hidden="true" /> +91 74559 97333</a>
+              <a className={ui.phone} href={`tel:${campaign.admissionsPhone}`}><Phone size={15} aria-hidden="true" /> {campaign.admissionsPhoneLabel}</a>
               <a className={ui.email} href="mailto:admissions@doonglobalschool.edu.in"><Mail size={14} aria-hidden="true" /><span>admissions@<wbr />doonglobalschool.edu.in</span></a>
               <p>CBSE education · A legacy since 1998</p>
             </div>

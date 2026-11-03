@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, MapPin, Phone, X } from "lucide-react";
+import { useCampaign } from "@/components/campaign-context";
 
 // Static Tailwind utility groups keep the markup and responsive states readable.
 const ui: Record<string, string> = {
@@ -35,6 +36,7 @@ const navigation = [
 ];
 
 export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
+  const campaign = useCampaign();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -93,9 +95,9 @@ export default function SiteHeader({ onEnquire }: { onEnquire: () => void }) {
           </nav>
 
           <div className={ui.actions}>
-            <a className={ui.phone} href="tel:+917455997333" aria-label="Call admissions on +91 74559 97333">
+            <a className={ui.phone} href={`tel:${campaign.admissionsPhone}`} aria-label={`Call admissions on ${campaign.admissionsPhoneLabel}`}>
               <span className={ui.phoneIcon}><Phone size={16} /></span>
-              <span className={ui.phoneText}>+91 74559 97333</span>
+              <span className={ui.phoneText}>{campaign.admissionsPhoneLabel}</span>
             </a>
             <button className={ui.enquire} onClick={enquire} aria-label="Enquire about admissions" aria-haspopup="dialog">Enquire now <ArrowUpRight size={17} /></button>
             <button ref={toggleRef} className={ui.toggle} aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>

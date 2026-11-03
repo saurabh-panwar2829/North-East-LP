@@ -116,7 +116,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
             <h3>A bigger world.<br /><em>A brighter future.</em></h3>
             <p className={ui.asideIntro}>A new chapter in Dehradun.<br />A place to learn, belong and grow.</p>
           </div>
-          <div className={ui.asideFoot}><span><MapPin size={12} aria-hidden="true" /> DEHRADUN, UTTARAKHAND</span><a href="tel:+917455997333"><Phone size={14} aria-hidden="true" /> +91 74559 97333 <ArrowRight size={14} aria-hidden="true" /></a></div>
+          <div className={ui.asideFoot}><span><MapPin size={12} aria-hidden="true" /> DEHRADUN, UTTARAKHAND</span><a href={`tel:${campaign.admissionsPhone}`}><Phone size={14} aria-hidden="true" /> {campaign.admissionsPhoneLabel} <ArrowRight size={14} aria-hidden="true" /></a></div>
         </div>
       </aside>
 
@@ -135,7 +135,7 @@ export default function AdmissionsForm({ onPrivacy, preset = null }: { onPrivacy
             <p>{result.delivery === "sent" ? "Your callback request has been delivered to the admissions team. We look forward to speaking with you." : "Send your details to admissions on WhatsApp, or open your email app to review and send. Your enquiry has not been sent yet."}</p>
             {result.whatsappUrl && <a className={ui.whatsapp} href={result.whatsappUrl} target="_blank" rel="noopener noreferrer"><span><MessageCircle size={18} aria-hidden="true" /> Send on WhatsApp</span><ArrowRight size={18} aria-hidden="true" /></a>}
             {result.emailUrl && <a className={ui.email} href={result.emailUrl}><span><Mail size={18} aria-hidden="true" /> Open email & send</span><ArrowRight size={18} aria-hidden="true" /></a>}
-            <a className={ui.resultPhone} href="tel:+917455997333"><Phone size={15} aria-hidden="true" /> +91 74559 97333</a>
+            <a className={ui.resultPhone} href={`tel:${campaign.admissionsPhone}`}><Phone size={15} aria-hidden="true" /> {campaign.admissionsPhoneLabel}</a>
             <button className={ui.back} onClick={() => setResult(null)}>Back to enquiry form</button>
           </div>
         ) : (
