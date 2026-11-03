@@ -71,8 +71,9 @@ test('validates each campaign against its own drive and hometown options', () =>
   }
   for (const input of [
     { campaign: 'uttarakhand', region: 'Siliguri', drive: 'Guwahati' },
-    { campaign: 'north-east', region: 'Haldwani', drive: 'Almora' },
-    { campaign: 'uttar-pradesh', region: 'Haldwani', drive: 'Almora' },
+    { campaign: 'uttarakhand', region: 'Haldwani', drive: 'Almora' },
+    { campaign: 'north-east', region: 'Srinagar', drive: 'Pauri' },
+    { campaign: 'uttar-pradesh', region: 'Srinagar', drive: 'Pauri' },
     { campaign: 'uttarakhand', region: 'Meerut', drive: 'Varanasi' },
     { campaign: 'north-east', region: 'Meerut', drive: 'Varanasi' },
   ]) {
@@ -99,15 +100,15 @@ test('custom Uttarakhand hometown requires bounded single-line text', () => {
 });
 
 test('Uttarakhand messages identify the selected region and preserve encoded parent details', () => {
-  const input = { ...valid, campaign: 'uttarakhand', region: 'Haldwani', drive: 'Almora', name: 'Parent & Guardian' };
+  const input = { ...valid, campaign: 'uttarakhand', region: 'Srinagar', drive: 'Pauri', name: 'Parent & Guardian' };
   const email = new URL(createEnquiryEmail(input));
   const whatsapp = new URL(createEnquiryWhatsApp(input));
-  assert.match(email.searchParams.get('subject'), /Uttarakhand admission drive · Almora/);
-  assert.match(email.searchParams.get('body'), /Haldwani \(Kumaun\)/);
-  assert.match(email.searchParams.get('body'), /Garhwal & Kumaun/);
+  assert.match(email.searchParams.get('subject'), /Uttarakhand admission drive · Pauri/);
+  assert.match(email.searchParams.get('body'), /Srinagar \(Garhwal\)/);
+  assert.match(email.searchParams.get('body'), /Campaign: Uttarakhand — Garhwal/);
   assert.match(email.searchParams.get('body'), /Parent & Guardian/);
   assert.match(email.searchParams.get('body'), /confirm the date and venue/);
-  assert.doesNotMatch(email.searchParams.get('body'), /North East|Siliguri|Guwahati/);
+  assert.doesNotMatch(email.searchParams.get('body'), /North East|Siliguri|Guwahati|Kumaun/);
   assert.equal(whatsapp.searchParams.get('text'), email.searchParams.get('body'));
   const custom = new URL(createEnquiryEmail({ ...input, region: OTHER_TOWN, city: 'Chakrata' }));
   assert.match(custom.searchParams.get('body'), /Chakrata, Uttarakhand/);

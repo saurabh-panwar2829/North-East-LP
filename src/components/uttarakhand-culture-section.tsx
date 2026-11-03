@@ -23,7 +23,7 @@ export default function UttarakhandCultureSection() {
           </svg>
           <div className="absolute top-[138px] left-[13.75%] z-1 flex -translate-x-1/2 flex-col items-center gap-3.5 text-[11px] font-semibold tracking-[1.3px] max-[900px]:text-[10px]">
             <span className="size-2 rounded-full bg-[#7c9366] shadow-[0_0_0_7px_#dae1ca,0_0_0_12px_#dfe5d3]" />
-            GARHWAL &amp; KUMAUN
+            GARHWAL
           </div>
           <Send className="route-plane absolute top-[95px] left-[47%] [transform:rotate(22deg)] fill-[#eceee1] stroke-[1.3]" size={28} />
           <div className="route-point point-doon absolute top-7.5 right-[4%] z-1 flex flex-col items-center gap-3.5 text-[11px] font-semibold tracking-[1.3px] max-[900px]:text-[10px] max-[760px]:right-0">

@@ -43,33 +43,33 @@ try {
     await page.setViewportSize({ width: 1440, height: 1000 });
   }
 
-  assert.match(await page.title(), /Garhwal & Kumaun/);
+  assert.match(await page.title(), /Garhwal/);
   assert.doesNotMatch(await page.locator('main').innerText(), /North East|Siliguri|Guwahati/);
-  await page.getByRole('button', { name: 'Kumaun 04', exact: true }).click();
-  assert.equal(await page.getByRole('button', { name: 'Kumaun 04', exact: true }).getAttribute('aria-pressed'), 'true');
-  assert.equal(await page.locator('.dgs-admission-drive-stops li').count(), 4);
+  assert.doesNotMatch(await page.locator('body').innerText(), /Kumaun|कुमाऊँ|Haldwani|Almora|Rudrapur|Pithoragarh/);
+  assert.equal(await page.getByRole('group', { name: 'Filter drive towns by region' }).count(), 0);
+  assert.equal(await page.locator('.dgs-admission-drive-stops li').count(), 9);
   await page.locator('.dgs-admission-drive-content').screenshot({ path: path('uttarakhand-drive'), style: 'header, .skip-link, .scroll-progress { visibility: hidden; }' });
-  await page.getByRole('button', { name: 'Register for the Haldwani admission drive', exact: true }).click();
-  assert.equal(await page.locator('#region').inputValue(), 'Haldwani');
-  assert.equal(await page.locator('#drive').inputValue(), 'Haldwani');
-  assert.doesNotMatch(await page.locator('#drive').innerText(), /Siliguri|Guwahati/);
-  await page.getByRole('button', { name: 'Register for Haldwani', exact: true }).click();
+  await page.getByRole('button', { name: 'Register for the Srinagar admission drive', exact: true }).click();
+  assert.equal(await page.locator('#region').inputValue(), 'Srinagar');
+  assert.equal(await page.locator('#drive').inputValue(), 'Srinagar');
+  assert.doesNotMatch(await page.locator('#drive').innerText(), /Siliguri|Guwahati|Haldwani|Almora|Rudrapur|Pithoragarh/);
+  assert.doesNotMatch(await page.locator('#region').innerText(), /Kumaun|Haldwani|Almora|Rudrapur|Pithoragarh|Nainital|Bageshwar|Champawat|Kashipur|Ranikhet/);
+  await page.getByRole('button', { name: 'Register for Srinagar', exact: true }).click();
   assert.equal(await page.locator('#parent-name').evaluate(el => el === document.activeElement), true);
   await page.locator('#parent-name').fill('Preview Test Parent');
   await page.locator('#mobile').fill('9876543210');
   await page.locator('#grade').selectOption('6');
   await page.locator('#enquiry-consent').check();
   const submitted = page.waitForRequest(request => request.url().endsWith('/api/enquiry') && request.method() === 'POST');
-  await page.getByRole('button', { name: 'Register for Haldwani', exact: true }).click();
+  await page.getByRole('button', { name: 'Register for Srinagar', exact: true }).click();
   assert.equal((await submitted).postDataJSON().campaign, 'uttarakhand');
   await page.getByText('Your enquiry is ready.', { exact: true }).waitFor();
   assert.match(await page.locator('#enquire').innerText(), /has not been sent yet/);
   const email = new URL(await page.getByRole('link', { name: 'Open email & send' }).getAttribute('href'));
-  assert.match(email.searchParams.get('body'), /Haldwani \(Kumaun\)/);
+  assert.match(email.searchParams.get('body'), /Srinagar \(Garhwal\)/);
   assert.match(email.searchParams.get('subject'), /Uttarakhand/);
   // Inspect prepared links only; no WhatsApp or email message is sent.
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Garhwal 09', exact: true }).click();
   await page.getByRole('button', { name: 'Register for the New Tehri admission drive', exact: true }).click();
   assert.equal(await page.locator('#drive').inputValue(), 'New Tehri');
   assert.equal(await page.locator('#parent-name').inputValue(), 'Preview Test Parent');
@@ -93,9 +93,9 @@ try {
   await page.getByRole('button', { name: 'Register for the Guwahati admission drive', exact: true }).click();
   assert.equal(await page.locator('#region').inputValue(), 'Guwahati');
   assert.equal(await page.locator('#parent-name').inputValue(), '');
-  assert.doesNotMatch(await page.locator('#drive').innerText(), /Haldwani|Almora/);
+  assert.doesNotMatch(await page.locator('#drive').innerText(), /Srinagar|Pauri/);
   await page.keyboard.press('Escape');
-  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal & Kumaun', exact: true }).click();
+  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal', exact: true }).click();
   await page.waitForURL('**/uttarakhand');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Open navigation' }).click();
@@ -106,7 +106,7 @@ try {
   await page.locator('.admissions-dialog').screenshot({ path: path('uttarakhand-form-mobile') });
   await page.keyboard.press('Escape');
 
-  const valid = { campaign: 'uttarakhand', name: 'Local Test Parent', phone: '9876543210', grade: '6', region: 'Haldwani', drive: 'Haldwani', interest: 'Boarding admissions', consent: true, website: '' };
+  const valid = { campaign: 'uttarakhand', name: 'Local Test Parent', phone: '9876543210', grade: '6', region: 'Srinagar', drive: 'Srinagar', interest: 'Boarding admissions', consent: true, website: '' };
   for (const invalid of [{ ...valid, campaign: 'north-east' }, { ...valid, drive: 'Guwahati' }, { ...valid, campaign: '__proto__' }, { ...valid, consent: false }]) {
     assert.equal((await context.request.post(`${base}/api/enquiry`, { data: invalid })).status(), 400);
   }
@@ -116,9 +116,8 @@ try {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.reload({ waitUntil: 'networkidle' });
-  await page.getByRole('button', { name: 'Kumaun 04', exact: true }).click();
-  await page.getByRole('button', { name: 'Register for the Almora admission drive', exact: true }).click();
-  assert.equal(await page.locator('#drive').inputValue(), 'Almora');
+  await page.getByRole('button', { name: 'Register for the Pauri admission drive', exact: true }).click();
+  assert.equal(await page.locator('#drive').inputValue(), 'Pauri');
   await page.keyboard.press('Escape');
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -146,7 +145,7 @@ try {
       assert.equal(await page.locator('#region').inputValue(), city);
       assert.equal(await page.locator('#drive').inputValue(), city);
       assert.equal(await page.locator('#parent-name').inputValue(), '');
-      assert.doesNotMatch(await page.locator('#drive').innerText(), /Guwahati|Haldwani/);
+      assert.doesNotMatch(await page.locator('#drive').innerText(), /Guwahati|Srinagar/);
       await page.keyboard.press('Escape');
     }
   }
@@ -192,14 +191,14 @@ try {
   await page.getByRole('button', { name: 'Register for the Varanasi admission drive', exact: true }).click();
   assert.equal(await page.locator('#drive').inputValue(), 'Varanasi');
   await page.keyboard.press('Escape');
-  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal & Kumaun', exact: true }).click();
+  await page.getByRole('navigation', { name: 'Regional admission pages' }).getByRole('link', { name: 'Uttarakhand · Garhwal', exact: true }).click();
   await page.waitForURL('**/uttarakhand');
   await page.getByRole('button', { name: 'Register for the Srinagar admission drive', exact: true }).click();
   assert.equal(await page.locator('#parent-name').inputValue(), '');
   assert.equal(await page.locator('#region').inputValue(), 'Srinagar');
   assert.equal(await page.locator('#hero-heading [lang="gbm"]').innerText(), 'नौन्याळौं कु भलु भोल।');
   assert.deepEqual(errors, []);
-  console.log('Passed: three campaigns, metadata, 13 Uttarakhand drive towns, redirect/query preservation, 22 UP cities, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
+  console.log('Passed: three campaigns, metadata, 9 Garhwal drive towns, redirect/query preservation, 22 UP cities, regional isolation, forms, API validation, responsive layouts, images, mobile navigation and motion.');
 } finally {
   await browser.close();
 }
